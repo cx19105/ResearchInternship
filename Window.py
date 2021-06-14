@@ -1,4 +1,4 @@
-from Colours import WHITE
+from Colours import WHITE, GREEN
 import pygame
 import tkinter
 import math
@@ -27,13 +27,14 @@ class Window:
     def makeSource(self, gridSquare):
         if gridSquare in self.Grid.Sources:
             self.Grid.Sources.remove(gridSquare)
+            self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
             self.Grid.Sources.append(gridSquare)
+            self.Grid.colourGrid(gridSquare, self.screen, GREEN)
 
     def updateWindow(self):
-
+        self.Grid.drawGrid(self.screen)
         while True:
-            self.Grid.drawGrid(self.screen)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
