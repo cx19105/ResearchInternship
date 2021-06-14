@@ -7,3 +7,5 @@ grid = Grid(GRIDSIZE)
 
 window = Window(grid)
 
+while True:
+    window.updateWindow()
