@@ -1,8 +1,10 @@
 from Colours import WHITE, GREEN
 import pygame
+from Model import Model
 import tkinter
 import math
 import sys
+import matplotlib.pyplot as plt
 
 class Window:
     def __init__(self, grid):
@@ -10,8 +12,9 @@ class Window:
 
         self.clock = pygame.time.Clock()
         self.Grid = grid
+        self.BottomMargin = 20
         windowWidth = (self.Grid.GridSquareSize[0]+self.Grid.Margin)*self.Grid.Size[0] + self.Grid.Margin
-        windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin
+        windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
         self.screen = pygame.display.set_mode((windowWidth, windowHeight))
         self.clock = pygame.time.Clock()
         self.screen.fill(WHITE)
@@ -32,6 +35,16 @@ class Window:
             self.Grid.Sources.append(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, GREEN)
 
+    def createGraph(self, data):
+        x = range(0, 40)
+        plt.plot(x,data)
+        plt.show()
+
+    def runModel(self):
+        model = Model(self.Grid)
+        data = model.diffusion()
+        self.createGraph(data)
+
     def updateWindow(self):
         self.Grid.drawGrid(self.screen)
         while True:
@@ -40,6 +53,9 @@ class Window:
                     pygame.quit()
                     sys.exit()
                 if pygame.mouse.get_pressed()[0] == 1:
-                    gridSquare = self.getGridSquare()
-                    self.makeSource(gridSquare)
+                    if pygame.mouse.get_pos()[1] < self.BottomMargin:
+                        gridSquare = self.getGridSquare()
+                        self.makeSource(gridSquare)
+                    else:
+                        self.runModel()
             pygame.display.update()

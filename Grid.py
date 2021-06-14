@@ -28,4 +28,3 @@ class Grid:
         xpos = (self.Margin + self.GridSquareSize[0])*gridSquare[0] + self.Margin
         ypos = (self.Margin + self.GridSquareSize[1])*gridSquare[1] + self.Margin
         pygame.draw.rect(display, colour, [xpos, ypos, self.GridSquareSize[0], self.GridSquareSize[1]])
-        print(xpos, ypos)
