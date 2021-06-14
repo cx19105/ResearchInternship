@@ -43,7 +43,14 @@ class Window:
     def runModel(self):
         model = Model(self.Grid)
         data = model.diffusion()
-        self.createGraph(data)
+        #self.createGraph(data)
+        count = 0
+        for i in data:
+            colour = (min((255*i,255)), 0, 0)
+            self.Grid.colourGrid([count, 1], self.screen, colour)
+            count += 1
+
+
 
     def updateWindow(self):
         self.Grid.drawGrid(self.screen)

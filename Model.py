@@ -6,8 +6,8 @@ class Model:
     def __init__(self, grid):
         self.Grid = grid
         self.Sources = self.Grid.Sources
-        self.Diffusivity = 0.1
-        
+        self.Diffusivity = 0.5
+
     def diffusion(self):
 
         grid = UnitGrid(self.Grid.Size)
@@ -16,5 +16,5 @@ class Model:
             state.insert(self.Sources[count], 10)
 
         eq = DiffusionPDE(diffusivity=self.Diffusivity)
-        result = eq.solve(state, t_range=100)
+        result = eq.solve(state, t_range=10)
         return result.data
