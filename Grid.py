@@ -12,17 +12,22 @@ class Grid:
         self.create()
 
 
-
     def create(self):
         for column in range(self.Size[0]):
-            self.Grid.append([])
+            columnVec = []
+            for row in range(self.Size[1]):
+                columnVec.append([])
+            self.Grid.append(columnVec)
+
 
     def drawGrid(self, display):
         display.fill(BLACK)
         for column in range(self.Size[0]):
-            xpos = (self.Margin + self.GridSquareSize[0])*column + self.Margin
-            ypos = self.Margin
-            pygame.draw.rect(display, WHITE, [xpos, ypos, self.GridSquareSize[0], self.GridSquareSize[1]])
+            for row in range(self.Size[1]):
+                xpos = (self.Margin + self.GridSquareSize[0])*column + self.Margin
+                ypos = (self.Margin + self.GridSquareSize[1])*row + self.Margin
+                pygame.draw.rect(display, WHITE, [xpos, ypos, self.GridSquareSize[0], self.GridSquareSize[1]])
+
 
     def colourGrid(self, gridSquare, display, colour):
         xpos = (self.Margin + self.GridSquareSize[0])*gridSquare[0] + self.Margin
