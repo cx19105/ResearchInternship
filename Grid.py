@@ -6,7 +6,7 @@ class Grid:
     def __init__(self, gridSize):
         self.Size = gridSize
         self.Grid = []
-        self.GridSquareSize = [20,20]
+        self.GridSquareSize = [4,4]
         self.Margin = 1
         self.Sources = []
         self.create()
