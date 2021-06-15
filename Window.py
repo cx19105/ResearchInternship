@@ -7,6 +7,7 @@ import math
 import sys
 import matplotlib.pyplot as plt
 import itertools
+from numericalSolution import DiffusionModel
 
 class Window:
     def __init__(self, grid):
@@ -44,6 +45,9 @@ class Window:
 
     def runModel(self):
         model = Model(self.Grid)
+        
+        diff = DiffusionModel(self.Grid)
+        diff.run()
         data = model.diffusion()
         mergedData = list(itertools.chain(*data))
         maxData = max(mergedData)
