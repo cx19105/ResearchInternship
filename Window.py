@@ -1,3 +1,4 @@
+from pde import grids
 from Colours import WHITE, GREEN
 import pygame
 from Model import Model
@@ -5,6 +6,7 @@ import tkinter
 import math
 import sys
 import matplotlib.pyplot as plt
+import itertools
 
 class Window:
     def __init__(self, grid):
@@ -13,9 +15,9 @@ class Window:
         self.clock = pygame.time.Clock()
         self.Grid = grid
         self.BottomMargin = 20
-        windowWidth = (self.Grid.GridSquareSize[0]+self.Grid.Margin)*self.Grid.Size[0] + self.Grid.Margin
-        windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
-        self.screen = pygame.display.set_mode((windowWidth, windowHeight))
+        self.windowWidth = (self.Grid.GridSquareSize[0]+self.Grid.Margin)*self.Grid.Size[0] + self.Grid.Margin
+        self.windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
+        self.screen = pygame.display.set_mode((self.windowWidth, self.windowHeight))
         self.clock = pygame.time.Clock()
         self.screen.fill(WHITE)
         self.running = False
@@ -43,13 +45,16 @@ class Window:
     def runModel(self):
         model = Model(self.Grid)
         data = model.diffusion()
+        mergedData = list(itertools.chain(*data))
+        maxData = max(mergedData)
+        minData = min(mergedData)
         #self.createGraph(data)
-        count = 0
-        for i in data:
-            colour = (min((255*i,255)), 0, 0)
-            self.Grid.colourGrid([count, 1], self.screen, colour)
-            count += 1
-
+        for col, arr in enumerate(data):
+            for row, val in enumerate(arr):
+                intensity = max(255-(val/(maxData - minData)*255),0)
+                colour = (255, intensity, intensity)
+                self.Grid.colourGrid([col, row], self.screen, colour)
+        self.Grid.Sources = []
 
 
     def updateWindow(self):
@@ -60,7 +65,7 @@ class Window:
                     pygame.quit()
                     sys.exit()
                 if pygame.mouse.get_pressed()[0] == 1:
-                    if pygame.mouse.get_pos()[1] < self.BottomMargin:
+                    if pygame.mouse.get_pos()[1] < self.windowHeight - self.BottomMargin:
                         gridSquare = self.getGridSquare()
                         self.makeSource(gridSquare)
                     else:
