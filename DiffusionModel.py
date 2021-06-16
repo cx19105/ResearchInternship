@@ -39,7 +39,6 @@ class DiffusionModel:
             for i in range(1, self.L[0]-1, self.dx):
                 for j in range(1, self.L[1]-1, self.dx):
                     u[k+1, i, j] = self.gamma * (u[k][i+1][j] + u[k][i-1][j] + u[k][i][j+1] + u[k][i][j-1] - 4*u[k][i][j]) + u[k][i][j]
-
         return u
 
     def plotheatmap(self, u_k, k):
@@ -52,7 +51,10 @@ class DiffusionModel:
     def run(self, time):
         self.u = self.calculate(self.u)
         uAtTime = self.u[time]
-        return uAtTime
+        uAhead = self.u[time+1]
+        uBehind = self.u[time-1]
+        mean = np.mean([uAtTime, uAhead, uBehind], axis=0)
+        return mean
         #self.plotheatmap(self.u[time], time)
 
 
