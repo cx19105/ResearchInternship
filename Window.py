@@ -1,5 +1,5 @@
 from pde import grids
-from Colours import WHITE, GREEN
+from Colours import WHITE, GREEN, BLUE, BLACK
 import pygame
 from Model import Model
 import tkinter
@@ -20,7 +20,9 @@ class Window:
         self.windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
         self.screen = pygame.display.set_mode((self.windowWidth, self.windowHeight))
         self.clock = pygame.time.Clock()
+        self.buttons = {'green':[0, self.windowWidth/4], 'blue':[self.windowWidth/4, self.windowWidth/2], 'black':[self.windowWidth/2, self.windowWidth]}
         self.screen.fill(WHITE)
+        self.currentSource = GREEN
         self.running = False
 
     def getGridSquare(self):
@@ -36,7 +38,18 @@ class Window:
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
             self.Grid.Sources.append(gridSquare)
-            self.Grid.colourGrid(gridSquare, self.screen, GREEN)
+            self.Grid.colourGrid(gridSquare, self.screen, self.currentSource)
+
+    def drawButtons(self):
+        for key, val in self.buttons.items():
+            if key == 'green':
+                colour = GREEN
+            elif key == 'blue':
+                colour = BLUE
+            else:
+                colour = BLACK
+            pygame.draw.rect(self.screen, colour, [val[0], self.windowHeight-self.BottomMargin, val[1]-val[0], self.BottomMargin])
+
 
     def createGraph(self, data):
         x = range(0, 40)
@@ -45,10 +58,10 @@ class Window:
 
     def runModel(self):
         model = Model(self.Grid)
-
         diff = DiffusionModel(self.Grid)
         data = diff.run(10)
-        #data = model.diffusion()
+        #data = model.diffusion(10)
+
         mergedData = list(itertools.chain(*data))
         maxData = max(mergedData)
         minData = min(mergedData)
@@ -61,8 +74,21 @@ class Window:
         self.Grid.Sources = []
 
 
+    def buttonPressed(self):
+        mousePosition = pygame.mouse.get_pos()
+        for key, val in self.buttons.items():
+            if mousePosition[0] in range(round(val[0]), round(val[1])):
+                if key == 'black':
+                    self.runModel()
+                elif key == 'green':
+                    self.currentSource = GREEN
+                elif key == 'blue':
+                    self.currentSource = BLUE
+
+
     def updateWindow(self):
         self.Grid.drawGrid(self.screen)
+        self.drawButtons()
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -73,5 +99,5 @@ class Window:
                         gridSquare = self.getGridSquare()
                         self.makeSource(gridSquare)
                     else:
-                        self.runModel()
+                        self.buttonPressed()
             pygame.display.update()

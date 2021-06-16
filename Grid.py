@@ -1,5 +1,7 @@
 
-from Colours import BLACK, WHITE,GREEN
+from numpy.lib.function_base import disp
+
+from Colours import BLACK, WHITE,GREEN, BLUE
 import pygame
 
 class Grid:

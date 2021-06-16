@@ -8,7 +8,7 @@ class Model:
         self.Sources = self.Grid.Sources
         self.Diffusivity = 0.5
 
-    def diffusion(self):
+    def diffusion(self, time):
 
         grid = UnitGrid(self.Grid.Size)
         state = ScalarField(grid)
@@ -16,5 +16,5 @@ class Model:
             state.insert(self.Sources[count], 10)
 
         eq = DiffusionPDE(diffusivity=self.Diffusivity)
-        result = eq.solve(state, t_range=10)
+        result = eq.solve(state, t_range=time)
         return result.data
