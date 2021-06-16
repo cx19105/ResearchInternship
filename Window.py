@@ -65,11 +65,12 @@ class Window:
 
     def runModel(self):
         model = Model(self.Grid)
-        for key, val in self.Grid.Sources:
+        dataList = []
+        for key, val in self.Grid.Sources.items():
             diff = DiffusionModel(self.Grid, val)
             data = diff.run(10)
+            dataList.append(data)
         #data = model.diffusion(10)
-
         mergedData = list(itertools.chain(*data))
         maxData = max(mergedData)
         minData = min(mergedData)
@@ -77,7 +78,7 @@ class Window:
         for col, arr in enumerate(data):
             for row, val in enumerate(arr):
                 intensity = max(255-(val/(maxData - minData)*255),0)
-                colour = (255, intensity, intensity)
+                colour = (0, intensity, 0)
                 self.Grid.colourGrid([col, row], self.screen, colour)
         self.Grid.Sources = []
 
