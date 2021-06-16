@@ -10,7 +10,7 @@ class Grid:
         self.Grid = []
         self.GridSquareSize = [10,10]
         self.Margin = 1
-        self.Sources = []
+        self.Sources = {'green':[], 'blue':[]}
         self.create()
 
 

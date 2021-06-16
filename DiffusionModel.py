@@ -6,12 +6,12 @@ from matplotlib.animation import FuncAnimation
 from numpy.core.fromnumeric import repeat
 
 class DiffusionModel:
-    def __init__(self, grid):
+    def __init__(self, grid, sources):
         self.L = grid.Size
         self.max_time = 750
         diffusionCoeff = 0.2
         self.dx = 1
-
+        self.sources = sources
         self.dt = (self.dx ** 2)/(4*diffusionCoeff)
         self.gamma = (diffusionCoeff * self.dt) / (self.dx ** 2)
         self.u = np.empty((self.max_time, self.L[0], self.L[1]))
@@ -20,7 +20,7 @@ class DiffusionModel:
     def boundaryConditions(self, grid):
 
         u_initial = np.zeros(self.L)
-        for source in grid.Sources:
+        for source in self.sources:
             u_initial[source[0]][source[1]] = 100
         u_top = 0
         u_bottom = 0

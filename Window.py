@@ -33,12 +33,19 @@ class Window:
         return gridSquare
 
     def makeSource(self, gridSquare):
-        if gridSquare in self.Grid.Sources:
-            self.Grid.Sources.remove(gridSquare)
+        if gridSquare in self.Grid.Sources['green']:
+            self.Grid.Sources['green'].remove(gridSquare)
+            self.Grid.colourGrid(gridSquare, self.screen, WHITE)
+        elif gridSquare in self.Grid.Sources['blue']:
+            self.Grid.Sources['blue'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
-            self.Grid.Sources.append(gridSquare)
+            if self.currentSource == GREEN:
+                self.Grid.Sources['green'].append(gridSquare)
+            elif self.currentSource == BLUE:
+                self.Grid.Sources['blue'].append(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, self.currentSource)
+        
 
     def drawButtons(self):
         for key, val in self.buttons.items():
@@ -58,8 +65,9 @@ class Window:
 
     def runModel(self):
         model = Model(self.Grid)
-        diff = DiffusionModel(self.Grid)
-        data = diff.run(10)
+        for key, val in self.Grid.Sources:
+            diff = DiffusionModel(self.Grid, val)
+            data = diff.run(10)
         #data = model.diffusion(10)
 
         mergedData = list(itertools.chain(*data))
