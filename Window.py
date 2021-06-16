@@ -45,7 +45,7 @@ class Window:
 
     def runModel(self):
         model = Model(self.Grid)
-        
+
         diff = DiffusionModel(self.Grid)
         diff.run()
         data = model.diffusion()
