@@ -11,7 +11,6 @@ class Model:
     def diffusion(self):
 
         grid = UnitGrid(self.Grid.Size)
-        print(grid.cell_coords)
         state = ScalarField(grid)
         for count in range(0, len(self.Sources)):
             state.insert(self.Sources[count], 10)

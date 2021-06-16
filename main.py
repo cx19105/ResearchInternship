@@ -1,7 +1,7 @@
 from Window import Window
 from Grid import Grid
 
-GRIDSIZE = (200,150)
+GRIDSIZE = (50,50)
 
 grid = Grid(GRIDSIZE)
 

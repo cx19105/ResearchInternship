@@ -47,15 +47,15 @@ class DiffusionModel:
         plt.pcolormesh(u_k, cmap=plt.cm.jet, vmin=0, vmax=100)
         plt.colorbar()
 
-        return plt
+        plt.show()
 
-    def animate(self, k):
-        self.plotheatmap(self.u[k], k)
-
-    def run(self):
+    def run(self, time):
         self.u = self.calculate(self.u)
-        anim = animation.FuncAnimation(plt.figure(), self.animate, interval=1, frames=self.max_time, repeat=False)
-        anim.save("heat_equation_solution.gif")
+        uAtTime = self.u[time]
+        return uAtTime
+        #self.plotheatmap(self.u[time], time)
+
+
 
 grid = Grid([50, 50])
 grid.Sources = [[1, 1], [48, 49], [25, 31], [1, 2], [1,3], [1,4],[1,5],[1,6],[1,7]]
