@@ -11,11 +11,12 @@ import itertools
 from DiffusionModel import DiffusionModel
 
 class Window:
-    def __init__(self, grid):
+    def __init__(self, grid, diffCoeff):
         pygame.init()
 
         self.clock = pygame.time.Clock()
         self.Grid = grid
+        self.diffCoeff = diffCoeff
         self.BottomMargin = 20
         self.windowWidth = (self.Grid.GridSquareSize[0]+self.Grid.Margin)*self.Grid.Size[0] + self.Grid.Margin
         self.windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
@@ -86,8 +87,10 @@ class Window:
     def runModel(self):
         model = Model(self.Grid)
         dataList = []
+        dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         for key, val in self.Grid.Sources.items():
-            diff = DiffusionModel(self.Grid, val)
+            diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt)
+            print(diff.dt)
             data = diff.run(10)
             dataList.append(data)
         #data = model.diffusion(10)
