@@ -1,5 +1,5 @@
-'''This file is used to store the colours used in the game
-the list is for the colours of the trains'''
+'''This file is used to store the colours used in
+any of the files'''
 
 LIGHT_GREY = (208, 214, 209)
 WHITE = (255, 255, 255)

@@ -3,12 +3,16 @@ import numpy as np
 
 
 class Model:
+    '''Uses the pde diffusion model'''
     def __init__(self, grid):
         self.Grid = grid
         self.Sources = self.Grid.Sources
         self.Diffusivity = 0.5
 
     def diffusion(self, time):
+
+        '''Creates a unit grid, and returns the concentration
+        in the form of a matrix after a set time period'''
 
         grid = UnitGrid(self.Grid.Size)
         state = ScalarField(grid)

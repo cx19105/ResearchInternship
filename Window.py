@@ -14,21 +14,23 @@ import time
 class Window:
     def __init__(self, grid, diffCoeff):
         pygame.init()
-
         self.clock = pygame.time.Clock()
         self.Grid = grid
-        self.diffCoeff = diffCoeff
+        self.diffCoeff = diffCoeff  #Dict of diffusion coefficients
         self.BottomMargin = 20
         self.windowWidth = (self.Grid.GridSquareSize[0]+self.Grid.Margin)*self.Grid.Size[0] + self.Grid.Margin
         self.windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
         self.screen = pygame.display.set_mode((self.windowWidth, self.windowHeight))
-        self.clock = pygame.time.Clock()
+        #Setting the location and sizes of the buttons
         self.buttons = {'green':[0, self.windowWidth/4], 'blue':[self.windowWidth/4, self.windowWidth/2], 'black':[self.windowWidth/2, self.windowWidth]}
         self.screen.fill(WHITE)
-        self.currentSource = GREEN
+        self.currentSource = GREEN #Currently selected button
         self.running = False
 
     def getGridSquare(self):
+
+        '''Find the currently clicked on grid square'''
+
         mousePosition = pygame.mouse.get_pos()
         column = mousePosition[0] / (self.Grid.GridSquareSize[0]+self.Grid.Margin)
         row = mousePosition[1] / (self.Grid.GridSquareSize[1]+self.Grid.Margin)
@@ -36,6 +38,10 @@ class Window:
         return gridSquare
 
     def makeSource(self, gridSquare):
+
+        '''Function that adds a source to the list if a grid square is clicked'''
+
+        #First checks if the grid square is already a source
         if gridSquare in self.Grid.Sources['green']:
             self.Grid.Sources['green'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
@@ -43,14 +49,19 @@ class Window:
             self.Grid.Sources['blue'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
+            #Adds the grid square to the corresponding source dictionary key
             if self.currentSource == GREEN:
                 self.Grid.Sources['green'].append(gridSquare)
             elif self.currentSource == BLUE:
                 self.Grid.Sources['blue'].append(gridSquare)
+            #Recreate the grid with the updated grid colours
             self.Grid.colourGrid(gridSquare, self.screen, self.currentSource)
         
 
     def drawButtons(self):
+
+        '''Adds all the buttons from the buttons dict to the window'''
+
         for key, val in self.buttons.items():
             if key == 'green':
                 colour = GREEN
@@ -62,18 +73,27 @@ class Window:
 
 
     def createGraph(self, data):
+
+        '''Function used for testing the model'''
+
         x = range(0, 40)
         plt.plot(x,data)
         plt.show()
 
     def colourGrid(self, dataList, range):
+
+        '''Calculates the correct colours of the grid according to the 
+        datalist matrix'''
+
+        #Iterating through each grid square
         for col, arr in enumerate(dataList[0]):
-            print(arr)
             for row, val in enumerate(arr):
+                #Finding the diffusion value and range for each source
                 sourceOne = dataList[0][col][row]
                 sourceTwo = dataList[1][col][row]
                 rangeOne = range[0][1] - range[0][0]
                 rangeTwo = range[1][1] - range[1][0]
+                #Avoiding divide by zero errors
                 if rangeOne == 0:
                     rangeOne = 1
                 if rangeTwo == 0:
@@ -81,25 +101,33 @@ class Window:
 
                 intensitySourceOne = max(255-(sourceOne/rangeOne*255),0)
                 intensitySourceTwo = max(255-(sourceTwo/rangeTwo*255),0)
-
+                
+                #Calculating the colour gradient between the two sources
                 colour = (255, intensitySourceOne, intensitySourceTwo)
                 self.Grid.colourGrid([col, row], self.screen, colour)
 
 
     def runModel(self, time):
+
+        '''Function that performs the diffusion method on the sources'''
+
         model = Model(self.Grid)
         dataList = []
+        #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         for key, val in self.Grid.Sources.items():
+            #Runs diffusion method for each source type
             diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt)
             data = diff.run(time)
             dataList.append(data)
         #data = model.diffusion(10)
+        #Finds max and min for each source
         mergedDataOne = list(itertools.chain(*dataList[0]))
         mergedDataTwo = list(itertools.chain(*dataList[1]))
         rangeOne = [min(mergedDataOne), max(mergedDataOne)]
         rangeTwo = [min(mergedDataTwo), max(mergedDataTwo)]
         #self.createGraph(data)
+        #Recolours the grid accordingly
         self.colourGrid(dataList, [rangeOne, rangeTwo])
         self.Grid.Sources = []
 
@@ -130,6 +158,9 @@ class Window:
         
 
     def buttonPressed(self):
+
+        '''Function that is run once a button has been pressed'''
+
         mousePosition = pygame.mouse.get_pos()
         for key, val in self.buttons.items():
             if mousePosition[0] in range(round(val[0]), round(val[1])):
@@ -143,6 +174,11 @@ class Window:
 
 
     def updateWindow(self):
+
+        '''Function that is run on an infinite loop, checking for updates
+        to the window'''
+
+        #Setting up the window
         self.Grid.drawGrid(self.screen)
         self.drawButtons()
         while True:
@@ -150,6 +186,7 @@ class Window:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                #If the mouse is pressed
                 if pygame.mouse.get_pressed()[0] == 1:
                     if pygame.mouse.get_pos()[1] < self.windowHeight - self.BottomMargin:
                         gridSquare = self.getGridSquare()
