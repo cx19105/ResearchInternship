@@ -49,9 +49,9 @@ class DiffusionModel:
 
     def run(self, time):
         self.u = self.calculate(self.u)
-        uAtTime = self.u[time]
-        uAhead = self.u[time+1]
-        uBehind = self.u[time-1]
+        uAtTime = self.u[time, :, :]
+        uAhead = self.u[time+1,:,:]
+        uBehind = self.u[time-1,:,:]
         mean = np.mean([uAtTime, uAhead, uBehind], axis=0)
         return mean
         #self.plotheatmap(self.u[time], time)

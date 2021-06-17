@@ -9,6 +9,7 @@ import sys
 import matplotlib.pyplot as plt
 import itertools
 from DiffusionModel import DiffusionModel
+import time
 
 class Window:
     def __init__(self, grid, diffCoeff):
@@ -67,6 +68,7 @@ class Window:
 
     def colourGrid(self, dataList, range):
         for col, arr in enumerate(dataList[0]):
+            print(arr)
             for row, val in enumerate(arr):
                 sourceOne = dataList[0][col][row]
                 sourceTwo = dataList[1][col][row]
@@ -84,14 +86,13 @@ class Window:
                 self.Grid.colourGrid([col, row], self.screen, colour)
 
 
-    def runModel(self):
+    def runModel(self, time):
         model = Model(self.Grid)
         dataList = []
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         for key, val in self.Grid.Sources.items():
             diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt)
-            print(diff.dt)
-            data = diff.run(10)
+            data = diff.run(time)
             dataList.append(data)
         #data = model.diffusion(10)
         mergedDataOne = list(itertools.chain(*dataList[0]))
@@ -102,13 +103,39 @@ class Window:
         self.colourGrid(dataList, [rangeOne, rangeTwo])
         self.Grid.Sources = []
 
+    def runModelAnimation(self, maxTime, timeInterval):
+        frameList = []
+        rangeList = []
+        dataList = []
+        dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
+        for frame in range(0, maxTime, timeInterval):
+            for key, val in self.Grid.Sources.items():
+                diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt)
+                data = diff.run(frame)
+                dataList.append(data)
+            mergedDataOne = list(itertools.chain(*dataList[0]))
+            mergedDataTwo = list(itertools.chain(*dataList[1]))
+            rangeOne = [min(mergedDataOne), max(mergedDataOne)]
+            rangeTwo = [min(mergedDataTwo), max(mergedDataTwo)]
+            rangeList.append([rangeOne, rangeTwo])
+            frameList.append(dataList)
+        count = 0
+        for frame in frameList:
+            #print(frame[count], rangeList[count])
+            self.colourGrid(frameList[count], rangeList[count])
+            pygame.display.update()
+            time.sleep(3)
+            count += 1
+        self.Grid.Sources = []
+        
 
     def buttonPressed(self):
         mousePosition = pygame.mouse.get_pos()
         for key, val in self.buttons.items():
             if mousePosition[0] in range(round(val[0]), round(val[1])):
                 if key == 'black':
-                    self.runModel()
+                    #self.runModel(100)
+                    self.runModelAnimation(100, 10)
                 elif key == 'green':
                     self.currentSource = GREEN
                 elif key == 'blue':
