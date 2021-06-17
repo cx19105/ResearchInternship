@@ -1,3 +1,4 @@
+from numpy.core.numeric import NaN
 from pde import grids
 from Colours import WHITE, GREEN, BLUE, BLACK
 import pygame
@@ -63,6 +64,25 @@ class Window:
         plt.plot(x,data)
         plt.show()
 
+    def colourGrid(self, dataList, range):
+        for col, arr in enumerate(dataList[0]):
+            for row, val in enumerate(arr):
+                sourceOne = dataList[0][col][row]
+                sourceTwo = dataList[1][col][row]
+                rangeOne = range[0][1] - range[0][0]
+                rangeTwo = range[1][1] - range[1][0]
+                if rangeOne == 0:
+                    rangeOne = 1
+                if rangeTwo == 0:
+                    rangeTwo = 1
+
+                intensitySourceOne = max(255-(sourceOne/rangeOne*255),0)
+                intensitySourceTwo = max(255-(sourceTwo/rangeTwo*255),0)
+
+                colour = (255, intensitySourceOne, intensitySourceTwo)
+                self.Grid.colourGrid([col, row], self.screen, colour)
+
+
     def runModel(self):
         model = Model(self.Grid)
         dataList = []
@@ -71,15 +91,12 @@ class Window:
             data = diff.run(10)
             dataList.append(data)
         #data = model.diffusion(10)
-        mergedData = list(itertools.chain(*data))
-        maxData = max(mergedData)
-        minData = min(mergedData)
+        mergedDataOne = list(itertools.chain(*dataList[0]))
+        mergedDataTwo = list(itertools.chain(*dataList[1]))
+        rangeOne = [min(mergedDataOne), max(mergedDataOne)]
+        rangeTwo = [min(mergedDataTwo), max(mergedDataTwo)]
         #self.createGraph(data)
-        for col, arr in enumerate(data):
-            for row, val in enumerate(arr):
-                intensity = max(255-(val/(maxData - minData)*255),0)
-                colour = (0, intensity, 0)
-                self.Grid.colourGrid([col, row], self.screen, colour)
+        self.colourGrid(dataList, [rangeOne, rangeTwo])
         self.Grid.Sources = []
 
 
