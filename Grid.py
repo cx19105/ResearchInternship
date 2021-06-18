@@ -6,7 +6,7 @@ class Grid:
     def __init__(self, gridSize):
         self.Size = gridSize
         self.Grid = []
-        self.GridSquareSize = [30,30] #Size in pixels of each gridsquare
+        self.GridSquareSize = [10,10] #Size in pixels of each gridsquare
         self.Margin = 1
         self.Sources = {'green':[], 'blue':[]}
         self.Boundary = []

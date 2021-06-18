@@ -43,7 +43,6 @@ class DiffusionModel:
 
     def checkBoundary(self, gridSquare):
         if gridSquare in self.Grid.Boundary:
-            print(gridSquare)
             return True
         else:
             return False

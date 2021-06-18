@@ -95,22 +95,25 @@ class Window:
         #Iterating through each grid square
         for col, arr in enumerate(dataList[0]):
             for row, val in enumerate(arr):
-                #Finding the diffusion value and range for each source
-                sourceOne = dataList[0][col][row]
-                sourceTwo = dataList[1][col][row]
-                rangeOne = range[0][1] - range[0][0]
-                rangeTwo = range[1][1] - range[1][0]
-                #Avoiding divide by zero errors
-                if rangeOne == 0:
-                    rangeOne = 1
-                if rangeTwo == 0:
-                    rangeTwo = 1
+                if [col, row] not in self.Grid.Boundary:
+                    #Finding the diffusion value and range for each source
+                    sourceOne = dataList[0][col][row]
+                    sourceTwo = dataList[1][col][row]
+                    rangeOne = range[0][1] - range[0][0]
+                    rangeTwo = range[1][1] - range[1][0]
+                    #Avoiding divide by zero errors
+                    if rangeOne == 0:
+                        rangeOne = 1
+                    if rangeTwo == 0:
+                        rangeTwo = 1
 
-                intensitySourceOne = max(255-(sourceOne/rangeOne*255),0)
-                intensitySourceTwo = max(255-(sourceTwo/rangeTwo*255),0)
-                
-                #Calculating the colour gradient between the two sources
-                colour = (255, intensitySourceOne, intensitySourceTwo)
+                    intensitySourceOne = max(255-(sourceOne/rangeOne*255),0)
+                    intensitySourceTwo = max(255-(sourceTwo/rangeTwo*255),0)
+                    
+                    #Calculating the colour gradient between the two sources
+                    colour = (255, intensitySourceOne, intensitySourceTwo)
+                else:
+                    colour = RED
                 self.Grid.colourGrid([col, row], self.screen, colour)
 
 
