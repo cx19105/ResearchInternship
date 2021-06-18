@@ -10,16 +10,17 @@ class DiffusionModel:
     '''Uses a numerical solution to solve the PDE'''
 
     def __init__(self, grid, sources, diffusionCoeff, dt):
-        self.L = grid.Size
-        self.max_time = 100
+        self.Grid = grid
+        self.L = self.Grid.Size
+        self.max_time = 200
         self.sources = sources
         self.dt = dt #Time step for the numerical method, fixed for all sources
         self.dx = 1 #Size of each gridSquare
         self.gamma = (diffusionCoeff * self.dt) / (self.dx ** 2)
         self.u = np.empty((self.max_time, self.L[0], self.L[1])) #3D matrix for solution,
-        self.boundaryConditions(grid) #Setting boundary conditions
+        self.boundaryConditions() #Setting boundary conditions
 
-    def boundaryConditions(self, grid):
+    def boundaryConditions(self):
 
         u_initial = np.zeros(self.L)
         #Setting each source as an initial condition with value 100
@@ -37,6 +38,16 @@ class DiffusionModel:
         self.u[:,:1,1:] = u_bottom
         self.u[:,:,(self.L[1]-1):] = u_right
 
+        for boundary in self.Grid.Boundary:
+            self.u[:, boundary[0], boundary[1]] = 0
+
+    def checkBoundary(self, gridSquare):
+        if gridSquare in self.Grid.Boundary:
+            print(gridSquare)
+            return True
+        else:
+            return False
+
     def calculate(self, u):
 
         '''Function that performs the numerical method
@@ -45,7 +56,8 @@ class DiffusionModel:
         for k in range(0, self.max_time-1, 1):
             for i in range(1, self.L[0]-1, self.dx):
                 for j in range(1, self.L[1]-1, self.dx):
-                    u[k+1, i, j] = self.gamma * (u[k][i+1][j] + u[k][i-1][j] + u[k][i][j+1] + u[k][i][j-1] - 4*u[k][i][j]) + u[k][i][j]
+                    if not self.checkBoundary([i, j]): #Returns true if square is in boundary
+                        u[k+1, i, j] = self.gamma * (u[k][i+1][j] + u[k][i-1][j] + u[k][i][j+1] + u[k][i][j-1] - 4*u[k][i][j]) + u[k][i][j]
         return u
 
     def plotheatmap(self, u_k, k):

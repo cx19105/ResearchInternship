@@ -1,6 +1,6 @@
 from numpy.core.numeric import NaN
 from pde import grids
-from Colours import WHITE, GREEN, BLUE, BLACK
+from Colours import WHITE, GREEN, BLUE, BLACK, RED
 import pygame
 from Model import Model
 import tkinter
@@ -22,7 +22,7 @@ class Window:
         self.windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
         self.screen = pygame.display.set_mode((self.windowWidth, self.windowHeight))
         #Setting the location and sizes of the buttons
-        self.buttons = {'green':[0, self.windowWidth/4], 'blue':[self.windowWidth/4, self.windowWidth/2], 'black':[self.windowWidth/2, self.windowWidth]}
+        self.buttons = {'green':[0, self.windowWidth/4], 'blue':[self.windowWidth/4, self.windowWidth/2], 'red':[self.windowWidth/2, 3*self.windowWidth/4], 'black':[3*self.windowWidth/4, self.windowWidth]}
         self.screen.fill(WHITE)
         self.currentSource = GREEN #Currently selected button
         self.running = False
@@ -48,12 +48,17 @@ class Window:
         elif gridSquare in self.Grid.Sources['blue']:
             self.Grid.Sources['blue'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
+        elif gridSquare in self.Grid.Boundary:
+            self.Grid.Boundary.remove(gridSquare)
+            self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
             #Adds the grid square to the corresponding source dictionary key
             if self.currentSource == GREEN:
                 self.Grid.Sources['green'].append(gridSquare)
             elif self.currentSource == BLUE:
                 self.Grid.Sources['blue'].append(gridSquare)
+            elif self.currentSource == RED:
+                self.Grid.Boundary.append(gridSquare)
             #Recreate the grid with the updated grid colours
             self.Grid.colourGrid(gridSquare, self.screen, self.currentSource)
         
@@ -67,6 +72,8 @@ class Window:
                 colour = GREEN
             elif key == 'blue':
                 colour = BLUE
+            elif key == 'red':
+                colour = RED
             else:
                 colour = BLACK
             pygame.draw.rect(self.screen, colour, [val[0], self.windowHeight-self.BottomMargin, val[1]-val[0], self.BottomMargin])
@@ -165,12 +172,14 @@ class Window:
         for key, val in self.buttons.items():
             if mousePosition[0] in range(round(val[0]), round(val[1])):
                 if key == 'black':
-                    #self.runModel(100)
-                    self.runModelAnimation(100, 10)
+                    self.runModel(100)
+                    #self.runModelAnimation(100, 10)
                 elif key == 'green':
                     self.currentSource = GREEN
                 elif key == 'blue':
                     self.currentSource = BLUE
+                elif key == 'red':
+                    self.currentSource = RED
 
 
     def updateWindow(self):
