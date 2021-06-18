@@ -192,6 +192,7 @@ class Window:
 
         #Setting up the window
         self.Grid.drawGrid(self.screen)
+
         self.drawButtons()
         while True:
             for event in pygame.event.get():
