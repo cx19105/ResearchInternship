@@ -2,6 +2,7 @@ class FileReader:
     def __init__(self, filename):
         self.file = filename
         self.readFile()
+        self.boundaryMargin = 10
     
     def readFile(self):
 
@@ -16,22 +17,23 @@ class FileReader:
     def createImage(self, grid):
 
         '''Updates the grid boundary and sources lists'''
-
+        margin = self.boundaryMargin/2
         fileContent = self.readFile()
         for row, line in enumerate(fileContent):
             for col, cell in enumerate(line):
                 if cell == '1':
-                    grid.Boundary.append([col, row])
+                    grid.Boundary.append([col+margin, row+margin])
                 elif cell == '2':
-                    grid.Sources['green'].append([col, row])
+                    grid.Sources['green'].append([col+margin, row+margin])
                 elif cell == '3':
-                    grid.Sources['blue'].append([col, row])
+                    grid.Sources['blue'].append([col+margin, row+margin])
     
     def getGridSize(self):
 
         '''Gets the size of the grid for setting up the grid image'''
 
         fileContent = self.readFile()
-        row = len(fileContent)
-        col = len(fileContent[0])
+        row = len(fileContent) + self.boundaryMargin
+        col = len(fileContent[0]) + self.boundaryMargin
+        
         return [col, row]

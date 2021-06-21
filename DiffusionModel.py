@@ -56,7 +56,11 @@ class DiffusionModel:
             else:
                 u[k][i-1][j] = diff*self.boundaryCoeff
         if not self.checkBoundary([i, j+1]) and not self.checkBoundary([i, j-1]):
-            print(i,j)
+            diff = abs(u[k][i][j+1] - u[k][i][j-1])
+            if u[k][i][j+1] < u[k][i][j-1]:
+                u[k][i][j+1] = diff*self.boundaryCoeff
+            else:
+                u[k][i][j-1] = diff*self.boundaryCoeff
 
         
 
@@ -71,6 +75,7 @@ class DiffusionModel:
                     if not self.checkBoundary([i, j]): #Returns true if square is in boundary
                         u[k+1, i, j] = self.gamma * (u[k][i+1][j] + u[k][i-1][j] + u[k][i][j+1] + u[k][i][j-1] - 4*u[k][i][j]) + u[k][i][j]
                     if self.checkBoundary([i, j]):
+                        u[k+1, i, j] = self.gamma * (u[k][i+1][j] + u[k][i-1][j] + u[k][i][j+1] + u[k][i][j-1] - 4*u[k][i][j]) + u[k][i][j]
                         self.boundaryDiffusion(i, j, k, u)
         return u
 

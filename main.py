@@ -3,7 +3,7 @@ from Grid import Grid
 from FileReader import FileReader
 
 GRIDSIZE = (50,50)
-DIFFCOEFF = {'green':0.2, 'blue':0.5, 'boundary':0.2}
+DIFFCOEFF = {'green':0.2, 'blue':0.5, 'boundary':0.9}
 
 #Insert filename for grid
 filename = 'ResearchInternship/sampleGrid.txt'
