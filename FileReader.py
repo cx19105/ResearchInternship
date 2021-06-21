@@ -17,7 +17,8 @@ class FileReader:
     def createImage(self, grid):
 
         '''Updates the grid boundary and sources lists'''
-        margin = self.boundaryMargin/2
+        margin = int(self.boundaryMargin/2)
+
         fileContent = self.readFile()
         for row, line in enumerate(fileContent):
             for col, cell in enumerate(line):
