@@ -127,7 +127,7 @@ class Window:
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         for key, val in self.Grid.Sources.items():
             #Runs diffusion method for each source type
-            diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt)
+            diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt, self.diffCoeff['boundary'])
             data = diff.run(time)
             dataList.append(data)
         #data = model.diffusion(10)

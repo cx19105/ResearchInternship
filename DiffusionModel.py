@@ -9,10 +9,11 @@ class DiffusionModel:
 
     '''Uses a numerical solution to solve the PDE'''
 
-    def __init__(self, grid, sources, diffusionCoeff, dt):
+    def __init__(self, grid, sources, diffusionCoeff, dt, boundaryDiffusion):
         self.Grid = grid
         self.L = self.Grid.Size
         self.max_time = 200
+        self.boundaryCoeff = boundaryDiffusion
         self.sources = sources
         self.dt = dt #Time step for the numerical method, fixed for all sources
         self.dx = 1 #Size of each gridSquare
@@ -47,6 +48,18 @@ class DiffusionModel:
         else:
             return False
 
+    def boundaryDiffusion(self, i, j, k, u):
+        if not self.checkBoundary([i+1,j]) and not self.checkBoundary([i-1, j]):
+            diff = abs(u[k][i+1][j] - u[k][i-1][j])
+            if u[k][i+1][j] < u[k][i-1][j]:
+                u[k][i+1][j] = diff*self.boundaryCoeff
+            else:
+                u[k][i-1][j] = diff*self.boundaryCoeff
+        if not self.checkBoundary([i, j+1]) and not self.checkBoundary([i, j-1]):
+            print(i,j)
+
+        
+
     def calculate(self, u):
 
         '''Function that performs the numerical method
@@ -57,6 +70,8 @@ class DiffusionModel:
                 for j in range(1, self.L[1]-1, self.dx):
                     if not self.checkBoundary([i, j]): #Returns true if square is in boundary
                         u[k+1, i, j] = self.gamma * (u[k][i+1][j] + u[k][i-1][j] + u[k][i][j+1] + u[k][i][j-1] - 4*u[k][i][j]) + u[k][i][j]
+                    if self.checkBoundary([i, j]):
+                        self.boundaryDiffusion(i, j, k, u)
         return u
 
     def plotheatmap(self, u_k, k):
