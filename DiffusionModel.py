@@ -43,25 +43,26 @@ class DiffusionModel:
             self.u[:, boundary[0], boundary[1]] = 0
 
     def checkBoundary(self, gridSquare):
-        if gridSquare in (self.Grid.Boundary['perm'] or self.Grid.Boundary['full']):
-            return True
+        if gridSquare in self.Grid.Boundary['perm']:
+            return 'perm'
+        elif gridSquare in self.Grid.Boundary['full']:
+            return 'edge'
         else:
-            return False
+            return None
 
     def boundaryDiffusion(self, i, j, k, u):
-        if not self.checkBoundary([i+1,j]) and not self.checkBoundary([i-1, j]):
+        if not self.checkBoundary([i+1,j]) in ['perm', 'edge'] and not self.checkBoundary([i-1, j]) in ['perm', 'edge']:
             diff = abs(u[k][i+1][j] - u[k][i-1][j])
             if u[k][i+1][j] < u[k][i-1][j]:
-                u[k][i+1][j] = diff*self.boundaryCoeff
+                u[k][i+1][j] = diff*self.boundaryCoeff[0]
             else:
-                u[k][i-1][j] = diff*self.boundaryCoeff
-        if not self.checkBoundary([i, j+1]) and not self.checkBoundary([i, j-1]):
+                u[k][i-1][j] = diff*self.boundaryCoeff[0]
+        if not self.checkBoundary([i, j+1]) in ['perm', 'edge'] and not self.checkBoundary([i, j-1]) in ['perm', 'edge']:
             diff = abs(u[k][i][j+1] - u[k][i][j-1])
             if u[k][i][j+1] < u[k][i][j-1]:
-                u[k][i][j+1] = diff*self.boundaryCoeff
+                u[k][i][j+1] = diff*self.boundaryCoeff[0]
             else:
-                u[k][i][j-1] = diff*self.boundaryCoeff
-
+                u[k][i][j-1] = diff*self.boundaryCoeff[0]
         
 
     def calculate(self, u):
@@ -72,9 +73,11 @@ class DiffusionModel:
         for k in range(0, self.max_time-1, 1):
             for i in range(1, self.L[0]-1, self.dx):
                 for j in range(1, self.L[1]-1, self.dx):
-                    if not self.checkBoundary([i, j]): #Returns true if square is in boundary
+                    if self.checkBoundary([i, j]) == None: #Returns true if square is in boundary
                         u[k+1, i, j] = self.gamma * (u[k][i+1][j] + u[k][i-1][j] + u[k][i][j+1] + u[k][i][j-1] - 4*u[k][i][j]) + u[k][i][j]
-                    if self.checkBoundary([i, j]):
+                    if self.checkBoundary([i, j]) == 'full':
+                        u[k+1, i, j] = 0
+                    if self.checkBoundary([i, j]) == 'perm':
                         self.boundaryDiffusion(i, j, k, u)
                         u[k+1, i, j] = self.gamma * (u[k][i+1][j] + u[k][i-1][j] + u[k][i][j+1] + u[k][i][j-1] - 4*u[k][i][j]) + u[k][i][j]
         return u

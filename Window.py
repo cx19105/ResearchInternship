@@ -114,8 +114,10 @@ class Window:
                     
                     #Calculating the colour gradient between the two sources
                     colour = (255, intensitySourceOne, intensitySourceTwo)
-                else:
+                if [col, row] in self.Grid.Boundary['perm']:
                     colour = RED
+                if [col, row] in self.Grid.Boundary['full']:
+                    colour = YELLOW
                 self.Grid.colourGrid([col, row], self.screen, colour)
 
 
@@ -129,7 +131,7 @@ class Window:
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         for key, val in self.Grid.Sources.items():
             #Runs diffusion method for each source type
-            diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt, self.diffCoeff['permBoundary'])
+            diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt, [self.diffCoeff['permBoundary'], self.diffCoeff['edgeBoundary']])
             data = diff.run(time)
             dataList.append(data)
         #data = model.diffusion(10)
