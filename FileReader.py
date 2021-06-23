@@ -23,11 +23,13 @@ class FileReader:
         for row, line in enumerate(fileContent):
             for col, cell in enumerate(line):
                 if cell == '1':
-                    grid.Boundary.append([col+margin, row+margin])
+                    grid.Boundary['perm'].append([col+margin, row+margin])
                 elif cell == '2':
                     grid.Sources['green'].append([col+margin, row+margin])
                 elif cell == '3':
                     grid.Sources['blue'].append([col+margin, row+margin])
+                elif cell == '4':
+                    grid.Boundary['full'].append([col+margin, row+margin])
     
     def getGridSize(self):
 

@@ -39,11 +39,11 @@ class DiffusionModel:
         self.u[:,:1,1:] = u_bottom
         self.u[:,:,(self.L[1]-1):] = u_right
 
-        for boundary in self.Grid.Boundary:
+        for boundary in (self.Grid.Boundary['full'] and self.Grid.Boundary['perm']):
             self.u[:, boundary[0], boundary[1]] = 0
 
     def checkBoundary(self, gridSquare):
-        if gridSquare in self.Grid.Boundary:
+        if gridSquare in (self.Grid.Boundary['perm'] or self.Grid.Boundary['full']):
             return True
         else:
             return False

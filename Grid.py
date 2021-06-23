@@ -1,5 +1,5 @@
 
-from Colours import BLACK, WHITE, GREEN, BLUE, RED
+from Colours import BLACK, WHITE, GREEN, BLUE, RED, YELLOW
 import pygame
 
 class Grid:
@@ -9,7 +9,7 @@ class Grid:
         self.GridSquareSize = [10,10] #Size in pixels of each gridsquare
         self.Margin = 1
         self.Sources = {'green':[], 'blue':[]}
-        self.Boundary = []
+        self.Boundary = {'perm':[], 'full':[]}
         self.create()
 
 
@@ -36,8 +36,10 @@ class Grid:
                 ypos = (self.Margin + self.GridSquareSize[1])*row + self.Margin
                 pygame.draw.rect(display, WHITE, [xpos, ypos, self.GridSquareSize[0], self.GridSquareSize[1]])
         
-        for boundary in self.Boundary:
+        for boundary in self.Boundary['perm']:
             self.colourGrid(boundary, display, RED)
+        for boundary in self.Boundary['full']:
+            self.colourGrid(boundary, display, YELLOW)
         for source in self.Sources['green']:
             self.colourGrid(source, display, GREEN)
         for source in self.Sources['blue']:

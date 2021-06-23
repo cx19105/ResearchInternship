@@ -1,6 +1,6 @@
 from numpy.core.numeric import NaN
 from pde import grids
-from Colours import WHITE, GREEN, BLUE, BLACK, RED
+from Colours import WHITE, GREEN, BLUE, BLACK, RED, YELLOW
 import pygame
 from Model import Model
 import tkinter
@@ -22,7 +22,7 @@ class Window:
         self.windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
         self.screen = pygame.display.set_mode((self.windowWidth, self.windowHeight))
         #Setting the location and sizes of the buttons
-        self.buttons = {'green':[0, self.windowWidth/4], 'blue':[self.windowWidth/4, self.windowWidth/2], 'red':[self.windowWidth/2, 3*self.windowWidth/4], 'black':[3*self.windowWidth/4, self.windowWidth]}
+        self.buttons = {'green':[0, self.windowWidth/5], 'blue':[self.windowWidth/5, 2*self.windowWidth/5], 'red':[2*self.windowWidth/5, 3*self.windowWidth/5], 'yellow':[3*self.windowWidth/5, 4*self.windowWidth/5], 'black':[4*self.windowWidth/5, self.windowWidth]}
         self.screen.fill(WHITE)
         self.currentSource = GREEN #Currently selected button
         self.running = False
@@ -74,6 +74,8 @@ class Window:
                 colour = BLUE
             elif key == 'red':
                 colour = RED
+            elif key == 'yellow':
+                colour = YELLOW
             else:
                 colour = BLACK
             pygame.draw.rect(self.screen, colour, [val[0], self.windowHeight-self.BottomMargin, val[1]-val[0], self.BottomMargin])
@@ -95,7 +97,7 @@ class Window:
         #Iterating through each grid square
         for col, arr in enumerate(dataList[0]):
             for row, val in enumerate(arr):
-                if [col, row] not in self.Grid.Boundary:
+                if [col, row] not in (self.Grid.Boundary['perm'] or self.Grid.Boundary['full']):
                     #Finding the diffusion value and range for each source
                     sourceOne = dataList[0][col][row]
                     sourceTwo = dataList[1][col][row]
@@ -127,7 +129,7 @@ class Window:
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         for key, val in self.Grid.Sources.items():
             #Runs diffusion method for each source type
-            diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt, self.diffCoeff['boundary'])
+            diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt, self.diffCoeff['permBoundary'])
             data = diff.run(time)
             dataList.append(data)
         #data = model.diffusion(10)
