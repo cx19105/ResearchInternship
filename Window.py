@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import itertools
 from DiffusionModel import DiffusionModel
 import time
+import testCode
 
 class Window:
     def __init__(self, grid, diffCoeff):
@@ -127,12 +128,14 @@ class Window:
 
         model = Model(self.Grid)
         dataList = []
+        testData = []
         #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         for key, val in self.Grid.Sources.items():
             #Runs diffusion method for each source type
             diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt, [self.diffCoeff['permBoundary'], self.diffCoeff['edgeBoundary']])
             data = diff.run(time)
+            testData.append(diff.u)
             dataList.append(data)
         #data = model.diffusion(10)
         #Finds max and min for each source
@@ -144,6 +147,7 @@ class Window:
         #Recolours the grid accordingly
         self.colourGrid(dataList, [rangeOne, rangeTwo])
         self.Grid.Sources = []
+        testCode.testConcentration(testData)
 
     def runModelAnimation(self, maxTime, timeInterval):
         frameList = []

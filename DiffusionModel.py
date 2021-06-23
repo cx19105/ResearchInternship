@@ -94,6 +94,7 @@ class DiffusionModel:
         an average of the consecutive times'''
 
         self.u = self.calculate(self.u)
+        
         uAtTime = self.u[time, :, :]
         uAhead = self.u[time+1,:,:]
         uBehind = self.u[time-1,:,:]

@@ -6,7 +6,7 @@ GRIDSIZE = (50,50)
 DIFFCOEFF = {'green':0.9, 'blue':0.8, 'permBoundary':0.9, 'edgeBoundary':0.0}
 
 #Insert filename for grid
-filename = 'testGrids/circleSize4.txt'
+filename = 'ResearchInternship/sampleGrid2.txt'
 gridFile = None
 
 if filename != None:
