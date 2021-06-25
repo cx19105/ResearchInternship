@@ -79,6 +79,11 @@ class DiffusionModel:
                 u[k][i][j-1] = diff*self.boundaryCoeff[0]
         
 
+    def reaction(self, u1, u2, i, j, k):
+        if u1[k, i, j] > u2[k, i, j]:
+            u1[k, i, j] = 0
+        return u1, u2
+
     def calculate(self, u1, u2):
 
         '''Function that performs the numerical method
@@ -91,7 +96,7 @@ class DiffusionModel:
                         
                         u1[k+1, i, j] = self.gamma[0] * (u1[k][i+1][j] + u1[k][i-1][j] + u1[k][i][j+1] + u1[k][i][j-1] - 4*u1[k][i][j]) + u1[k][i][j]
                         u2[k+1, i, j] = self.gamma[1] * (u2[k][i+1][j] + u2[k][i-1][j] + u2[k][i][j+1] + u2[k][i][j-1] - 4*u2[k][i][j]) + u2[k][i][j]
-
+                        u1, u2 = self.reaction(u1, u2, i, j, k)
                     if self.checkBoundary([i, j]) == 'full':
                         u1[k+1, i, j] = 0
                         u2[k+1, i, j] = 0
