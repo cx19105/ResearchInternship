@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import itertools
 from DiffusionModel import DiffusionModel
 import time
-import testCode
+#import testCode
 
 class Window:
     def __init__(self, grid, diffCoeff):
@@ -49,8 +49,11 @@ class Window:
         elif gridSquare in self.Grid.Sources['blue']:
             self.Grid.Sources['blue'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
-        elif gridSquare in self.Grid.Boundary:
-            self.Grid.Boundary.remove(gridSquare)
+        elif gridSquare in self.Grid.Boundary['perm']:
+            self.Grid.Boundary['perm'].remove(gridSquare)
+            self.Grid.colourGrid(gridSquare, self.screen, WHITE)
+        elif gridSquare in self.Grid.Boundary['full']:
+            self.Grid.Boundary['full'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
             #Adds the grid square to the corresponding source dictionary key
@@ -59,7 +62,9 @@ class Window:
             elif self.currentSource == BLUE:
                 self.Grid.Sources['blue'].append(gridSquare)
             elif self.currentSource == RED:
-                self.Grid.Boundary.append(gridSquare)
+                self.Grid.Boundary['perm'].append(gridSquare)
+            elif self.currentSource == YELLOW:
+                self.Grid.Boundary['full'].append(gridSquare)
             #Recreate the grid with the updated grid colours
             self.Grid.colourGrid(gridSquare, self.screen, self.currentSource)
         
@@ -131,12 +136,10 @@ class Window:
         testData = []
         #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
-        for key, val in self.Grid.Sources.items():
-            #Runs diffusion method for each source type
-            diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt, [self.diffCoeff['permBoundary'], self.diffCoeff['edgeBoundary']])
-            data = diff.run(time)
-            testData.append(diff.u)
-            dataList.append(data)
+        #Runs diffusion method for each source type
+        diff = DiffusionModel(self.Grid, self.Grid.Sources, self.diffCoeff, dt, [self.diffCoeff['permBoundary'], self.diffCoeff['edgeBoundary']])
+        dataList = diff.run(time)
+        #testData.append(diff)
         #data = model.diffusion(10)
         #Finds max and min for each source
         mergedDataOne = list(itertools.chain(*dataList[0]))
@@ -147,7 +150,8 @@ class Window:
         #Recolours the grid accordingly
         self.colourGrid(dataList, [rangeOne, rangeTwo])
         self.Grid.Sources = []
-        testCode.testConcentration(testData)
+        #Uncomment following line to run test on total concentration
+        #testCode.testConcentration(testData)
 
     def runModelAnimation(self, maxTime, timeInterval):
         frameList = []
@@ -191,6 +195,8 @@ class Window:
                     self.currentSource = BLUE
                 elif key == 'red':
                     self.currentSource = RED
+                elif key == 'yellow':
+                    self.currentSource = YELLOW
 
 
     def updateWindow(self):

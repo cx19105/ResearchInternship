@@ -16,5 +16,6 @@ def testConcentration(dataList):
         x.append(count)
     
     plt.plot(x, sourceOneSum, 'r-', sourceTwoSum, 'b-')
+    plt.legend(['Source 1', 'Source 2'])
     plt.show()
 
