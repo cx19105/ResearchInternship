@@ -1,22 +1,19 @@
-from numpy.core.numeric import NaN
-from pde import grids
 from Colours import WHITE, GREEN, BLUE, BLACK, RED, YELLOW
 import pygame
-from Model import Model
 import tkinter
 import math
 import sys
 import matplotlib.pyplot as plt
-import itertools
-from DiffusionModel import DiffusionModel
 import time
 #import testCode
 
 class Window:
-    def __init__(self, grid, diffCoeff):
+    def __init__(self, grid, diffCoeff, time):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.Grid = grid
+        self.time = time
+        self.maxTime = time+1
         self.diffCoeff = diffCoeff  #Dict of diffusion coefficients
         self.BottomMargin = 20
         self.windowWidth = (self.Grid.GridSquareSize[0]+self.Grid.Margin)*self.Grid.Size[0] + self.Grid.Margin
@@ -43,28 +40,28 @@ class Window:
         '''Function that adds a source to the list if a grid square is clicked'''
 
         #First checks if the grid square is already a source
-        if gridSquare in self.Grid.Sources['green']:
+        if gridSquare in self.Grid.sources['green']:
             self.Grid.Sources['green'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
-        elif gridSquare in self.Grid.Sources['blue']:
+        elif gridSquare in self.Grid.sources['blue']:
             self.Grid.Sources['blue'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
-        elif gridSquare in self.Grid.Boundary['perm']:
+        elif gridSquare in self.Grid.boundary['perm']:
             self.Grid.Boundary['perm'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
-        elif gridSquare in self.Grid.Boundary['full']:
+        elif gridSquare in self.Grid.boundary['full']:
             self.Grid.Boundary['full'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
             #Adds the grid square to the corresponding source dictionary key
             if self.currentSource == GREEN:
-                self.Grid.Sources['green'].append(gridSquare)
+                self.Grid.sources['green'].append(gridSquare)
             elif self.currentSource == BLUE:
-                self.Grid.Sources['blue'].append(gridSquare)
+                self.Grid.sources['blue'].append(gridSquare)
             elif self.currentSource == RED:
-                self.Grid.Boundary['perm'].append(gridSquare)
+                self.Grid.boundary['perm'].append(gridSquare)
             elif self.currentSource == YELLOW:
-                self.Grid.Boundary['full'].append(gridSquare)
+                self.Grid.boundary['full'].append(gridSquare)
             #Recreate the grid with the updated grid colours
             self.Grid.colourGrid(gridSquare, self.screen, self.currentSource)
         
@@ -95,61 +92,87 @@ class Window:
         plt.plot(x,data)
         plt.show()
 
-    def colourGrid(self, dataList, range):
+    def getNeighbouringCells(self, cellPosition, maxSize):
+        #First neighbour is left, then up, right and then down
+        neighbours = [None, None, None, None]
+        if cellPosition[0] > 0:
+            neighbours[0] = (self.Grid.Grid[cellPosition[0] - 1][cellPosition[1]])
+        if cellPosition[0] < maxSize[0]-1:
+            neighbours[2] = (self.Grid.Grid[cellPosition[0] + 1][cellPosition[1]])
+        if cellPosition[1] > 0:
+            neighbours[1] = (self.Grid.Grid[cellPosition[0]][cellPosition[1] - 1])
+        if cellPosition[1] < maxSize[1]-1:
+            neighbours[3] = (self.Grid.Grid[cellPosition[0]][cellPosition[1] + 1])
+        return neighbours
+
+    def colourGrid(self, time):
 
         '''Calculates the correct colours of the grid according to the 
         datalist matrix'''
 
         #Iterating through each grid square
-        for col, arr in enumerate(dataList[0]):
-            for row, val in enumerate(arr):
-                if [col, row] not in (self.Grid.Boundary['perm'] or self.Grid.Boundary['full']):
-                    #Finding the diffusion value and range for each source
-                    sourceOne = dataList[0][col][row]
-                    sourceTwo = dataList[1][col][row]
-                    rangeOne = range[0][1] - range[0][0]
-                    rangeTwo = range[1][1] - range[1][0]
-                    #Avoiding divide by zero errors
-                    if rangeOne == 0:
-                        rangeOne = 1
-                    if rangeTwo == 0:
-                        rangeTwo = 1
 
-                    intensitySourceOne = max(255-(sourceOne/rangeOne*255),0)
-                    intensitySourceTwo = max(255-(sourceTwo/rangeTwo*255),0)
-                    
+        
+
+        dataList = [[],[]]
+        for col in self.Grid.Grid:
+            for cell in col:
+                dataList[0].append(cell.u1[time])
+                dataList[1].append(cell.u2[time])
+                #if [col, row] not in (self.Grid.boundary['perm'] or self.Grid.boundary['full']):
+                    #Finding the diffusion value and range for each source
+                    #Avoiding divide by zero errors
+
+        rangeOne = max(dataList[0]) - min(dataList[0])
+        rangeTwo = max(dataList[1]) - min(dataList[1])
+        if rangeOne == 0:
+            rangeOne = 1
+        if rangeTwo == 0:
+            rangeTwo = 1
+
+        for col in self.Grid.Grid:
+            for cell in col:
+                intensitySourceOne = max(255-(((cell.u1[time]-min(dataList[0]))/rangeOne)*255),0)
+                intensitySourceTwo = max(255-((cell.u2[time]/rangeTwo)*255),0)
+            
                     #Calculating the colour gradient between the two sources
-                    colour = (255, intensitySourceOne, intensitySourceTwo)
-                if [col, row] in self.Grid.Boundary['perm']:
+                colour = (255, intensitySourceOne, intensitySourceTwo)
+                if cell.position in self.Grid.boundary['perm']:
                     colour = RED
-                if [col, row] in self.Grid.Boundary['full']:
+                if cell.position in self.Grid.boundary['full']:
                     colour = YELLOW
-                self.Grid.colourGrid([col, row], self.screen, colour)
+                self.Grid.colourGrid(cell.position, self.screen, colour)
 
 
     def runModel(self, time):
 
         '''Function that performs the diffusion method on the sources'''
 
-        model = Model(self.Grid)
-        dataList = []
         testData = []
         #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         #Runs diffusion method for each source type
-        diff = DiffusionModel(self.Grid, self.Grid.Sources, self.diffCoeff, dt, [self.diffCoeff['permBoundary'], self.diffCoeff['edgeBoundary']])
-        dataList = diff.run(time)
-        #testData.append(diff)
-        #data = model.diffusion(10)
+        
+        self.Grid.boundaryConditions(time)
+        gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
+        for timeStep in range(0, time-1):
+            for col in self.Grid.Grid:
+                for cell in col:
+                    neighbouringCells = self.getNeighbouringCells(cell.position, self.Grid.Size)
+                    cell.update(neighbouringCells, gamma, timeStep)
+            for col in self.Grid.Grid:
+                for cell in col:
+                    cell.u1[timeStep+1] = cell.nextValues[0]
+                    cell.u2[timeStep+1] = cell.nextValues[1]
+       
+        
+        
         #Finds max and min for each source
-        mergedDataOne = list(itertools.chain(*dataList[0]))
-        mergedDataTwo = list(itertools.chain(*dataList[1]))
-        rangeOne = [min(mergedDataOne), max(mergedDataOne)]
-        rangeTwo = [min(mergedDataTwo), max(mergedDataTwo)]
         #self.createGraph(data)
         #Recolours the grid accordingly
-        self.colourGrid(dataList, [rangeOne, rangeTwo])
-        self.Grid.Sources = []
+        self.colourGrid(self.time)
+
+        self.Grid.sources = []
         #Uncomment following line to run test on total concentration
         #testCode.testConcentration(testData)
 
@@ -159,7 +182,7 @@ class Window:
         dataList = []
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         for frame in range(0, maxTime, timeInterval):
-            for key, val in self.Grid.Sources.items():
+            for key, val in self.Grid.sources.items():
                 diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt)
                 data = diff.run(frame)
                 dataList.append(data)
@@ -176,7 +199,7 @@ class Window:
             pygame.display.update()
             time.sleep(3)
             count += 1
-        self.Grid.Sources = []
+        self.Grid.sources = []
         
 
     def buttonPressed(self):
@@ -187,7 +210,7 @@ class Window:
         for key, val in self.buttons.items():
             if mousePosition[0] in range(round(val[0]), round(val[1])):
                 if key == 'black':
-                    self.runModel(100)
+                    self.runModel(self.maxTime)
                     #self.runModelAnimation(100, 10)
                 elif key == 'green':
                     self.currentSource = GREEN
@@ -205,7 +228,7 @@ class Window:
         to the window'''
 
         #Setting up the window
-        self.Grid.drawGrid(self.screen)
+        self.Grid.drawGrid(self.screen, self.diffCoeff)
 
         self.drawButtons()
         while True:
