@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.integrate import odeint
+import matplotlib.pyplot as plt
 
 
 class Cell:
@@ -25,27 +26,44 @@ class Cell:
 
         return [u1, u2]
 
-    def reactionEq(self, z, t):
+    def ode_FE(self, f, g, U_0, dt, T):
+        N_t = int(round(float(T)/dt))
+        u1 = np.zeros(N_t + 1)
+        u2 = np.zeros(N_t + 1)
+        t = np.linspace(0, N_t * dt, len(u1))
+        u1[0] = U_0[0]
+        u2[0] = U_0[1]
+        for n in range(N_t):
+            u1[n+1] = u1[n] + dt*f(u1[n], u2[n], t[n])
+            #u2[n+1] = u2[n] + dt*g(u1[n], u2[n], t[n])
+        return u1, u2, t
+
+    def reactionEq(self, z):
         u1 = z[0]
         u2 = z[1]
         #Insert differential equation for reaction
-        du1dt = (u1-u2)/2
-        du2dt = (u1+u2)/5
-        dzdt = [du1dt, du2dt]
-        return dzdt
+        #Initially using u1 + u2 = 2u1
+
+        def f(u1, u2, t):
+            return -0.4*u1 + u2
+
+        def g(u1, u2, t):
+            return u2
+
+        u1, u2, t = self.ode_FE(f=f, g=g, U_0 = z, dt=0.1, T=11)
+
+        return [u1[-1], u2[-1]]
+        #Fraction of chemicals
+
 
     def reactionUpdate(self, neighbouringCells, time, currentValues):
 
         u1 = currentValues[0]
         u2 = currentValues[1]
+        z0 = [u1, u2]
+        z = self.reactionEq(z0)
 
-        if u1 > 2*u2:
-            z0 = [u1, u2]
-            tspan = [time, time+1]
-            z = odeint(self.reactionEq, z0, tspan)
-            return z[1]
-        else:
-            return [u1, u2]
+        return z
 
     def update(self, neighbouringCells, gamma, time):
         currentValues = [self.u1[time], self.u2[time]]
