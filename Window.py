@@ -152,7 +152,6 @@ class Window:
         #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         #Runs diffusion method for each source type
-        
         self.Grid.boundaryConditions(time)
         gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
         for timeStep in range(0, time-1):
@@ -164,11 +163,7 @@ class Window:
                 for cell in col:
                     cell.u1[timeStep+1] = cell.nextValues[0]
                     cell.u2[timeStep+1] = cell.nextValues[1]
-       
-        
-        
         #Finds max and min for each source
-        #self.createGraph(data)
         #Recolours the grid accordingly
         self.colourGrid(self.time)
 
@@ -181,26 +176,27 @@ class Window:
         rangeList = []
         dataList = []
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
-        for frame in range(0, maxTime, timeInterval):
-            for key, val in self.Grid.sources.items():
-                diff = DiffusionModel(self.Grid, val, self.diffCoeff[key], dt)
-                data = diff.run(frame)
-                dataList.append(data)
-            mergedDataOne = list(itertools.chain(*dataList[0]))
-            mergedDataTwo = list(itertools.chain(*dataList[1]))
-            rangeOne = [min(mergedDataOne), max(mergedDataOne)]
-            rangeTwo = [min(mergedDataTwo), max(mergedDataTwo)]
-            rangeList.append([rangeOne, rangeTwo])
-            frameList.append(dataList)
-        count = 0
-        for frame in frameList:
-            #print(frame[count], rangeList[count])
-            self.colourGrid(frameList[count], rangeList[count])
+        self.Grid.boundaryConditions(maxTime)
+        gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
+        for timeStep in range(0, maxTime-1):
+            for col in self.Grid.Grid:
+                for cell in col:
+                    neighbouringCells = self.getNeighbouringCells(cell.position, self.Grid.Size)
+                    cell.update(neighbouringCells, gamma, timeStep)
+            for col in self.Grid.Grid:
+                for cell in col:
+                    cell.u1[timeStep+1] = cell.nextValues[0]
+                    cell.u2[timeStep+1] = cell.nextValues[1]
+        frame = 0
+        while frame < maxTime:
+            self.colourGrid(frame)
             pygame.display.update()
-            time.sleep(3)
-            count += 1
-        self.Grid.sources = []
-        
+            time.sleep(0.1)
+            if frame >= maxTime-1:
+                frame = 0
+            else:
+                frame += 1
+
 
     def buttonPressed(self):
 
@@ -210,8 +206,8 @@ class Window:
         for key, val in self.buttons.items():
             if mousePosition[0] in range(round(val[0]), round(val[1])):
                 if key == 'black':
-                    self.runModel(self.maxTime)
-                    #self.runModelAnimation(100, 10)
+                    #self.runModel(self.maxTime)
+                    self.runModelAnimation(self.maxTime, 10)
                 elif key == 'green':
                     self.currentSource = GREEN
                 elif key == 'blue':

@@ -27,6 +27,9 @@ class Cell:
         return [u1, u2]
 
     def ode_FE(self, f, g, U_0, dt, T):
+        '''
+        Forward euler method for solving ODE for reaction term
+        '''
         N_t = int(round(float(T)/dt))
         u1 = np.zeros(N_t + 1)
         u2 = np.zeros(N_t + 1)
@@ -62,11 +65,10 @@ class Cell:
         u2 = currentValues[1]
         z0 = [u1, u2]
         z = self.reactionEq(z0)
-
         return z
 
     def update(self, neighbouringCells, gamma, time):
         currentValues = [self.u1[time], self.u2[time]]
         currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
-        currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
+        #currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
         self.nextValues = currentValues
