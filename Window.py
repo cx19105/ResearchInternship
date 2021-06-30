@@ -8,7 +8,7 @@ import time
 #import testCode
 
 class Window:
-    def __init__(self, grid, diffCoeff, time):
+    def __init__(self, grid, diffCoeff, time, animation):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.Grid = grid
@@ -24,6 +24,7 @@ class Window:
         self.screen.fill(WHITE)
         self.currentSource = GREEN #Currently selected button
         self.running = False
+        self.animation = animation
 
     def getGridSquare(self):
 
@@ -206,8 +207,10 @@ class Window:
         for key, val in self.buttons.items():
             if mousePosition[0] in range(round(val[0]), round(val[1])):
                 if key == 'black':
-                    #self.runModel(self.maxTime)
-                    self.runModelAnimation(self.maxTime, 10)
+                    if self.animation == True:
+                        self.runModelAnimation(self.maxTime, 10)
+                    else:
+                        self.runModel(self.maxTime)
                 elif key == 'green':
                     self.currentSource = GREEN
                 elif key == 'blue':
