@@ -13,7 +13,7 @@ class Window:
         self.clock = pygame.time.Clock()
         self.Grid = grid
         self.time = time
-        self.maxTime = time+1
+        self.maxTime = time + 1
         self.diffCoeff = diffCoeff  #Dict of diffusion coefficients
         self.BottomMargin = 20
         self.windowWidth = (self.Grid.GridSquareSize[0]+self.Grid.Margin)*self.Grid.Size[0] + self.Grid.Margin
@@ -113,8 +113,6 @@ class Window:
 
         #Iterating through each grid square
 
-        
-
         dataList = [[],[]]
         for col in self.Grid.Grid:
             for cell in col:
@@ -123,6 +121,9 @@ class Window:
                 #if [col, row] not in (self.Grid.boundary['perm'] or self.Grid.boundary['full']):
                     #Finding the diffusion value and range for each source
                     #Avoiding divide by zero errors
+
+        maxSourceOne = 100
+        maxSourceTwo = 100
 
         rangeOne = max(dataList[0]) - min(dataList[0])
         rangeTwo = max(dataList[1]) - min(dataList[1])
@@ -133,8 +134,8 @@ class Window:
 
         for col in self.Grid.Grid:
             for cell in col:
-                intensitySourceOne = max(255-(((cell.u1[time]-min(dataList[0]))/rangeOne)*255),0)
-                intensitySourceTwo = max(255-((cell.u2[time]/rangeTwo)*255),0)
+                intensitySourceOne = max(255-255*cell.u1[time]/maxSourceOne,0)
+                intensitySourceTwo = max(255-255*cell.u2[time]/maxSourceTwo,0)
             
                     #Calculating the colour gradient between the two sources
                 colour = (255, intensitySourceOne, intensitySourceTwo)

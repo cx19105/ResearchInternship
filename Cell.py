@@ -26,7 +26,7 @@ class Cell:
 
         return [u1, u2]
 
-    def ode_FE(self, f, g, U_0, dt, T):
+    def ode_FE(self, f, g, u_0, dt, T):
         '''
         Forward euler method for solving ODE for reaction term
         '''
@@ -34,14 +34,15 @@ class Cell:
         u1 = np.zeros(N_t + 1)
         u2 = np.zeros(N_t + 1)
         t = np.linspace(0, N_t * dt, len(u1))
-        u1[0] = U_0[0]
-        u2[0] = U_0[1]
+        u1[0] = u_0[0]
+        u2[0] = u_0[1]
         for n in range(N_t):
             u1[n+1] = u1[n] + dt*f(u1[n], u2[n], t[n])
             #u2[n+1] = u2[n] + dt*g(u1[n], u2[n], t[n])
+        print(u1, u2)
         return u1, u2, t
 
-    def reactionEq(self, z):
+    '''def reactionEq(self, z):
         u1 = z[0]
         u2 = z[1]
         #Insert differential equation for reaction
@@ -53,10 +54,28 @@ class Cell:
         def g(u1, u2, t):
             return u2
 
-        u1, u2, t = self.ode_FE(f=f, g=g, U_0 = z, dt=0.1, T=11)
+        u1, u2, t = self.ode_FE(f=f, g=g, u_0 = z, dt=0.1, T=11)
 
         return [u1[-1], u2[-1]]
-        #Fraction of chemicals
+        #Fraction of chemicals'''
+
+
+    def reactionEq(self, z):
+        u1 = z[0]
+        u2 = z[1]
+        def f(u1, u2):
+            tot = u1 + u2
+            u2_new = u2 + 0.1*u1
+            u1_new = tot - u2_new
+            return [u1_new, u2_new]
+
+        def g(u1, u2):
+            return 0.9*u1
+
+        #u1, u2, t = self.ode_FE(f=f, g=g, u_0 = z, dt = 0.1, T = 11)
+        u_new = f(u1, u2)
+        print(u_new)
+        return u_new
 
 
     def reactionUpdate(self, neighbouringCells, time, currentValues):
@@ -69,6 +88,6 @@ class Cell:
 
     def update(self, neighbouringCells, gamma, time):
         currentValues = [self.u1[time], self.u2[time]]
-        currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
-        #currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
+        #currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
+        currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
         self.nextValues = currentValues

@@ -4,12 +4,12 @@ from FileReader import FileReader
 
 GRIDSIZE = (50,50)
 DIFFCOEFF = {'green':0.4, 'blue':0.8, 'permBoundary':0.8, 'edgeBoundary':0.0}
-TIME = 100
+TIME = 20
 
 animation = True
 
 #Insert filename for grid
-filename = 'ResearchInternship/sampleGrid2.txt'
+filename = 'ResearchInternship/sampleGrid3.txt'
 gridFile = None
 
 if filename != None:

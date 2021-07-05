@@ -2,7 +2,7 @@ class FileReader:
     def __init__(self, filename):
         self.file = filename
         self.readFile()
-        self.boundaryMargin = 20
+        self.boundaryMargin = 0
     
     def readFile(self):
 
