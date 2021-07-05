@@ -3,12 +3,14 @@ import pygame
 import tkinter
 import math
 import sys
+import testCode
 import matplotlib.pyplot as plt
 import time
+import numpy as np
 #import testCode
 
 class Window:
-    def __init__(self, grid, diffCoeff, time, animation):
+    def __init__(self, grid, diffCoeff, time, animation, continuousSources):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.Grid = grid
@@ -25,6 +27,7 @@ class Window:
         self.currentSource = GREEN #Currently selected button
         self.running = False
         self.animation = animation
+        self.continuousSources = continuousSources
 
     def getGridSquare(self):
 
@@ -150,16 +153,18 @@ class Window:
 
         '''Function that performs the diffusion method on the sources'''
 
-        testData = []
+        if self.continuousSources:
+            self.Grid.updateSources()
 
-        self.Grid.updateSources()
-
+        testDataU1 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
+        testDataU2 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
         #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         #Runs diffusion method for each source type
         self.Grid.boundaryConditions(time)
         gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
         for timeStep in range(0, time-1):
+            testDataTimeStep = [[],[]]
             for col in self.Grid.Grid:
                 for cell in col:
                     neighbouringCells = self.getNeighbouringCells(cell.position, self.Grid.Size)
@@ -168,19 +173,24 @@ class Window:
                 for cell in col:
                     cell.u1[timeStep+1] = cell.nextValues[0]
                     cell.u2[timeStep+1] = cell.nextValues[1]
+                    testDataU1[timeStep, self.Grid.Grid.index(col), col.index(cell)] = cell.u1[timeStep]
+                    testDataU2[timeStep, self.Grid.Grid.index(col), col.index(cell)] = cell.u2[timeStep]
+        
         #Finds max and min for each source
         #Recolours the grid accordingly
         self.colourGrid(self.time)
-
         self.Grid.sources = []
         #Uncomment following line to run test on total concentration
-        #testCode.testConcentration(testData)
+        testCode.testConcentration([testDataU1, testDataU2])
 
     def runModelAnimation(self, maxTime, timeInterval):
         frameList = []
         rangeList = []
         dataList = []
-        self.Grid.updateSources()
+
+        if self.continuousSources:
+            self.Grid.updateSources()
+
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         self.Grid.boundaryConditions(maxTime)
         gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
