@@ -10,6 +10,7 @@ class Cell:
         self.u2 = []
         self.nextValues = []
         self.boundary = 1
+        self.source = False
 
     def diffusionUpdate(self, neighbouringCells, gamma, time, currentValues):
         neighbourSum1 = []
@@ -87,7 +88,10 @@ class Cell:
         return z
 
     def update(self, neighbouringCells, gamma, time):
-        currentValues = [self.u1[time], self.u2[time]]
-        currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
-        currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
-        self.nextValues = currentValues
+        if not self.source:
+            currentValues = [self.u1[time], self.u2[time]]
+            currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
+            currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
+            self.nextValues = currentValues
+        else:
+            self.nextValues = [self.u1[time], self.u2[time]]

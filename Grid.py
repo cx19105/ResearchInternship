@@ -71,3 +71,10 @@ class Grid:
     def gammaCalculation(self, dt, diffCoeff):
         gamma = [(diffCoeff['green'] * dt), (diffCoeff['blue'] * dt)]
         return gamma
+
+    def updateSources(self):
+        for col in self.Grid:
+            for cell in col:
+                if (cell.position in self.sources['green'] or cell.position in self.sources['blue']):
+                    cell.source = True
+                print(cell.source)

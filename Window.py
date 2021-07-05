@@ -151,6 +151,9 @@ class Window:
         '''Function that performs the diffusion method on the sources'''
 
         testData = []
+
+        self.Grid.updateSources()
+
         #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         #Runs diffusion method for each source type
@@ -177,6 +180,7 @@ class Window:
         frameList = []
         rangeList = []
         dataList = []
+        self.Grid.updateSources()
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         self.Grid.boundaryConditions(maxTime)
         gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)

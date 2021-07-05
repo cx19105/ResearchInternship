@@ -3,8 +3,8 @@ from Grid import Grid
 from FileReader import FileReader
 
 GRIDSIZE = (50,50)
-DIFFCOEFF = {'green':0.4, 'blue':0.8, 'permBoundary':0.8, 'edgeBoundary':0.0}
-TIME = 20
+DIFFCOEFF = {'green':0.8, 'blue':0.8, 'permBoundary':0.8, 'edgeBoundary':0.0}
+TIME = 100
 
 animation = True
 
