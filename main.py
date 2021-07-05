@@ -9,7 +9,7 @@ TIME = 20
 animation = True
 
 #Insert filename for grid
-filename = 'ResearchInternship/sampleGrid3.txt'
+filename = 'ResearchInternship/sampleGrid2.txt'
 gridFile = None
 
 if filename != None:
