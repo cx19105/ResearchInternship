@@ -180,8 +180,9 @@ class Window:
         #Recolours the grid accordingly
         self.colourGrid(self.time)
         self.Grid.sources = []
+
         #Uncomment following line to run test on total concentration
-        testCode.testConcentration([testDataU1, testDataU2])
+        #testCode.testConcentration([testDataU1, testDataU2])
 
     def runModelAnimation(self, maxTime, timeInterval):
         frameList = []

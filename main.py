@@ -5,9 +5,9 @@ from FileReader import FileReader
 GRIDSIZE = (50,50)
 DIFFCOEFF = {'green':0.8, 'blue':0.8, 'permBoundary':0.8, 'edgeBoundary':0.0}
 TIME = 100
-CONTINUOUS_SOURCES = False
+CONTINUOUS_SOURCES = True
 
-animation = False
+animation = True
 
 #Insert filename for grid
 filename = 'ResearchInternship/sampleGrid2.txt'

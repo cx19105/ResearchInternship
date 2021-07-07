@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt
-
+import reactionEquations
 
 class Cell:
     def __init__(self, x, y):
@@ -62,20 +62,15 @@ class Cell:
 
 
     def reactionEq(self, z):
-        u1 = z[0]
-        u2 = z[1]
 
-        def f(u1, u2):
-            tot = u1 + u2
-            u2_new = u2 + 0.1*u1
-            u1_new = tot - u2_new
-            return [u1_new, u2_new]
-
-        def g(u1, u2):
-            return 0.9*u1
-
+        reactions = [reactionEquations.f, reactionEquations.g]
         #u1, u2, t = self.ode_FE(f=f, g=g, u_0 = z, dt = 0.1, T = 11)
-        u_new = f(u1, u2)
+        
+        rates = [0.1]
+        u_new = z
+        for reaction in reactions:
+            u_new = reaction(u_new[0], u_new[1], rates)
+
         return u_new
 
 
