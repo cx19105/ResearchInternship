@@ -1,19 +1,24 @@
 from Window import Window
 from Grid import Grid
 from FileReader import FileReader
+import InitialWindow
 
-GRIDSIZE = (50,50)
-DIFFCOEFF = {'green':0.8, 'blue':0.8, 'permBoundary':0.8, 'edgeBoundary':0.0}
-TIME = 100
-CONTINUOUS_SOURCES = True
+entryBoxes = InitialWindow.makeWindow()
 
-animation = True
+values = {'Gridsize':[int(entryBoxes[0]), int(entryBoxes[1])], 'DiffCoeff':[float(entryBoxes[2]), float(entryBoxes[3]), float(entryBoxes[4]), float(entryBoxes[5])], 'time': int(entryBoxes[6]), 'filename':entryBoxes[7], 
+    'toggleSource':entryBoxes[8], 'animation':entryBoxes[9], 'file':entryBoxes[10]}
+
+GRIDSIZE = values['Gridsize']
+DIFFCOEFF = {'green':values['DiffCoeff'][0], 'blue':values['DiffCoeff'][1], 'permBoundary':values['DiffCoeff'][2], 'edgeBoundary':values['DiffCoeff'][3]}
+TIME = values['time']
+CONTINUOUS_SOURCES = values['toggleSource']
+animation = values['animation']
 
 #Insert filename for grid
-filename = 'ResearchInternship/sampleGrid2.txt'
+filename = values['filename']
 gridFile = None
 
-if filename != None:
+if values['file'] == True:
     gridFile = FileReader(filename)
     grid = Grid(gridFile.getGridSize())
     gridFile.createImage(grid)

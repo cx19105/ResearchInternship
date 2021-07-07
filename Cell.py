@@ -65,7 +65,6 @@ class Cell:
 
         reactions = [reactionEquations.f, reactionEquations.g]
         #u1, u2, t = self.ode_FE(f=f, g=g, u_0 = z, dt = 0.1, T = 11)
-        
         rates = [0.1]
         u_new = z
         for reaction in reactions:
