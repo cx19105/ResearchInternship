@@ -5,6 +5,9 @@ import reactionEquations
 
 class Cell:
     def __init__(self, x, y, reactionRates):
+        '''
+        Cell class contains information about each individual grid square
+        '''
         self.position = [x, y]
         self.u1 = []
         self.u2 = []
@@ -14,15 +17,23 @@ class Cell:
         self.rates = reactionRates
 
     def diffusionUpdate(self, neighbouringCells, gamma, time, currentValues):
+        '''
+        Runs the diffusion code for each cell based on the concentration of the
+        cells neighbouring it, which are passed in
+        '''
         neighbourSum1 = []
         neighbourSum2 = []
         for neighbour in neighbouringCells:
             if neighbour != None:
+                #Find the concentration in the surrounding cells for each source
                 neighbourSum1.append(neighbour.u1[time])
                 neighbourSum2.append(neighbour.u2[time])
+
+        #Runs the diffusion numerical method, partial differential equation
         u1 = gamma[0] * (sum(neighbourSum1) - 4*currentValues[0]) + currentValues[0]
         u2 = gamma[1] * (sum(neighbourSum2) - 4*currentValues[1]) + currentValues[1]
 
+        #Need to update to get better boundary diffusion
         u1 *= self.boundary
         u2 *= self.boundary
 
@@ -63,19 +74,21 @@ class Cell:
 
 
     def reactionEq(self, z):
-
+        '''
+        Runs each of the reaction equations in the reaction equations file
+        '''
         reactions = [reactionEquations.f, reactionEquations.g]
-        #u1, u2, t = self.ode_FE(f=f, g=g, u_0 = z, dt = 0.1, T = 11)
-        rates = [0.1]
         u_new = z
+        #Iterates through each function
         for reaction in reactions:
-            u_new = reaction(u_new[0], u_new[1], rates)
-
+            u_new = reaction(u_new[0], u_new[1], self.rates)
         return u_new
 
 
     def reactionUpdate(self, neighbouringCells, time, currentValues):
-
+        '''
+        Runs the reaction model for each cell in the grid
+        '''
         u1 = currentValues[0]
         u2 = currentValues[1]
         z0 = [u1, u2]
@@ -83,6 +96,11 @@ class Cell:
         return z
 
     def update(self, neighbouringCells, gamma, time):
+        '''
+        Update the concentrations of each cell using both the diffusion and
+        reaction models
+        '''
+        #Ensure source's maintain 100 concentration
         if not self.source:
             currentValues = [self.u1[time], self.u2[time]]
             currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
