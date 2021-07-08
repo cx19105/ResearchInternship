@@ -5,24 +5,24 @@ from Cell import Cell
 import numpy as np
 
 class Grid:
-    def __init__(self, gridSize):
+    def __init__(self, gridSize, reactionRates):
         self.Size = gridSize
         self.Grid = []
         self.GridSquareSize = [20,20] #Size in pixels of each gridsquare
         self.Margin = 1
         self.sources = {'green':[], 'blue':[]}
         self.boundary = {'perm':[], 'full':[]}
-        self.create()
+        self.create(reactionRates)
 
 
-    def create(self):
+    def create(self, reactionRates):
 
         '''Creating the initial grid matrix'''
 
         for column in range(self.Size[0]):
             columnVec = []
             for row in range(self.Size[1]):
-                newCell = Cell(column, row)
+                newCell = Cell(column, row, reactionRates)
                 columnVec.append(newCell)
             self.Grid.append(columnVec)
 

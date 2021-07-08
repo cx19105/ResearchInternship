@@ -110,13 +110,51 @@ def makeWindow():
 
     filenameEntry = tk.Entry(window)
     filenameEntry.grid(row=13, column=2, columnspan = 3)
-    filenameEntry.insert(0, 'ResearchInternship/sampleGrid2.txt')
+    filenameEntry.insert(0, 'sampleGrid2.txt')
 
-    entries = [gridSizeEntryCol, gridSizeEntryRow, diffCoeffEntryS1, diffCoeffEntryS2, diffCoeffEntryB1, diffCoeffEntryB2, timeEntry, filenameEntry]
+    separator3 = ttk.Separator(window, orient='horizontal')
+    separator3.grid(row=14, column = 0, columnspan = 8, sticky='ew', pady=5)
+
+    reactTermText = tk.Label(window, text="Reaction Parameters")
+    reactTermText.config(font=('Courier', 22))
+    reactTermText.grid(row=15, column = 1, padx = 5, pady = 5, columnspan=6)
+
+    reactTerm1Text = tk.Label(window, text="Source 1")
+    reactTerm1Text.grid(row=16, column = 0, columnspan = 2)
+
+    reactTerm1Entry = tk.Entry(window, width = 5)
+    reactTerm1Entry.grid(row=17, column = 0, columnspan = 2)
+    reactTerm1Entry.insert(0, 0.8)
+
+    reactTerm2Text = tk.Label(window, text="Source 2")
+    reactTerm2Text.grid(row=16, column = 2, columnspan = 2)
+
+    reactTerm2Entry = tk.Entry(window, width = 5)
+    reactTerm2Entry.grid(row=17, column = 2, columnspan = 2)
+    reactTerm2Entry.insert(0, 0.8)
+
+    reactTerm3Text = tk.Label(window, text="Boundary 1")
+    reactTerm3Text.grid(row=16, column = 4, columnspan = 2)
+
+    reactTerm3Entry = tk.Entry(window, width = 5)
+    reactTerm3Entry.grid(row=17, column = 4, columnspan = 2)
+    reactTerm3Entry.insert(0, 0.8)
+
+    reactTerm4Text = tk.Label(window, text="Boundary 2")
+    reactTerm4Text.grid(row=16, column = 6, columnspan = 2)
+
+    reactTerm4Entry = tk.Entry(window, width = 5)
+    reactTerm4Entry.grid(row=17, column = 6, columnspan = 2)
+    reactTerm4Entry.insert(0, 0)
+
+    separator4 = ttk.Separator(window, orient='horizontal')
+    separator4.grid(row=18, column = 0, columnspan = 8, sticky='ew', pady=5)
+
+    entries = [gridSizeEntryCol, gridSizeEntryRow, diffCoeffEntryS1, diffCoeffEntryS2, diffCoeffEntryB1, diffCoeffEntryB2, timeEntry, filenameEntry, reactTerm1Entry, reactTerm2Entry, reactTerm3Entry, reactTerm4Entry]
     boolEntries = [toggleSourceBoolVar, animationBoolVar, filenameBoolVar]
 
     continueButton = tk.Button(window, text="Continue", command =lambda:returnEntries(entries, boolEntries))
-    continueButton.grid(row=14, column=3, columnspan=2, padx = 5, pady =5)
+    continueButton.grid(row=19, column=3, columnspan=2, padx = 5, pady =5)
 
     tk.mainloop()
 

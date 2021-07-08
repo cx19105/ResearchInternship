@@ -4,13 +4,14 @@ import matplotlib.pyplot as plt
 import reactionEquations
 
 class Cell:
-    def __init__(self, x, y):
+    def __init__(self, x, y, reactionRates):
         self.position = [x, y]
         self.u1 = []
         self.u2 = []
         self.nextValues = []
         self.boundary = 1
         self.source = False
+        self.rates = reactionRates
 
     def diffusionUpdate(self, neighbouringCells, gamma, time, currentValues):
         neighbourSum1 = []
