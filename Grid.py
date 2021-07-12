@@ -70,7 +70,7 @@ class Grid:
                     cell.u2[0] = 100
 
     def gammaCalculation(self, dt, diffCoeff):
-        gamma = [(diffCoeff['green'] * dt), (diffCoeff['blue'] * dt)]
+        gamma = [(diffCoeff['green'] * dt), (diffCoeff['blue'] * dt), (((diffCoeff['green'] + diffCoeff['blue'])/2) * dt)]
         return gamma
 
     def updateSources(self):
