@@ -28,6 +28,7 @@ class Window:
         self.running = False
         self.animation = animation
         self.continuousSources = continuousSources
+        self.selectedCells = []
 
     def getGridSquare(self):
 
@@ -108,6 +109,13 @@ class Window:
         if cellPosition[1] < maxSize[1]-1:
             neighbours[3] = (self.Grid.Grid[cellPosition[0]][cellPosition[1] + 1])
         return neighbours
+
+    def getValueOfCell(self):
+        with open('SelectedCellValues.txt','a') as file:
+            for cell in self.Grid.selectedCells:
+                file.write("Cell: "+ str(cell.position)+'\n')
+                for time in range(0, len(cell.u1)):
+                    file.write(str(time)+': '+ str(cell.u1[time])+' '+str(cell.u2[time])+ ' '+str(cell.u3[time])+'\n')
 
     def colourGrid(self, time):
 
@@ -215,6 +223,7 @@ class Window:
                     cell.u1[timeStep+1] = cell.nextValues[0]
                     cell.u2[timeStep+1] = cell.nextValues[1]
                     cell.u3[timeStep+1] = cell.nextValues[2]
+        self.getValueOfCell()
         frame = 0
         while frame < maxTime:
             self.colourGrid(frame)

@@ -5,17 +5,17 @@ from Cell import Cell
 import numpy as np
 
 class Grid:
-    def __init__(self, gridSize, reactionRates):
+    def __init__(self, gridSize, reactionRates, selectedCoords):
         self.Size = gridSize
         self.Grid = []
         self.GridSquareSize = [20,20] #Size in pixels of each gridsquare
         self.Margin = 1
         self.sources = {'green':[], 'blue':[]}
         self.boundary = {'perm':[], 'full':[]}
-        self.create(reactionRates)
+        self.selectedCells = []
+        self.create(reactionRates, selectedCoords)
 
-
-    def create(self, reactionRates):
+    def create(self, reactionRates, selectedCoords):
 
         '''Creating the initial grid matrix'''
 
@@ -24,6 +24,8 @@ class Grid:
             for row in range(self.Size[1]):
                 newCell = Cell(column, row, reactionRates)
                 columnVec.append(newCell)
+                if [column, row] in selectedCoords:
+                    self.selectedCells.append(newCell)
             self.Grid.append(columnVec)
 
     def drawGrid(self, display, diffCoeff):

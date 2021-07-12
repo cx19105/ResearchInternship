@@ -16,16 +16,18 @@ TIME = values['time']
 CONTINUOUS_SOURCES = values['toggleSource']
 animation = values['animation']
 
+selectedCoords = [[10,10],[20,20],[30,30]]
+
 #Insert filename for grid
 filename = 'ResearchInternship/'+values['filename']
 gridFile = None
 
 if values['file'] == True:
     gridFile = FileReader(filename)
-    grid = Grid(gridFile.getGridSize(), REACTTERMS)
+    grid = Grid(gridFile.getGridSize(), REACTTERMS, selectedCoords)
     gridFile.createImage(grid)
 else:
-    grid = Grid(GRIDSIZE, REACTTERMS)
+    grid = Grid(GRIDSIZE, REACTTERMS, selectedCoords)
 
 window = Window(grid, DIFFCOEFF, TIME, animation, CONTINUOUS_SOURCES)
 
