@@ -11,6 +11,7 @@ class Cell:
         self.position = [x, y]
         self.u1 = []
         self.u2 = []
+        self.u3 = []
         self.nextValues = []
         self.boundary = 1
         self.source = False
@@ -37,7 +38,9 @@ class Cell:
         u1 *= self.boundary
         u2 *= self.boundary
 
-        return [u1, u2]
+        u3 = currentValues[2]
+
+        return [u1, u2, u3]
 
     '''def ode_FE(self, f, g, u_0, dt, T):
         
@@ -77,11 +80,11 @@ class Cell:
         '''
         Runs each of the reaction equations in the reaction equations file
         '''
-        reactions = [reactionEquations.f, reactionEquations.g]
+        reactions = [reactionEquations.h]
         u_new = z
         #Iterates through each function
         for reaction in reactions:
-            u_new = reaction(u_new[0], u_new[1], self.rates)
+            u_new = reaction(u_new[0], u_new[1], u_new[2], self.rates)
         return u_new
 
 
@@ -91,7 +94,8 @@ class Cell:
         '''
         u1 = currentValues[0]
         u2 = currentValues[1]
-        z0 = [u1, u2]
+        u3 = currentValues[2]
+        z0 = [u1, u2, u3]
         z = self.reactionEq(z0)
         return z
 
@@ -102,9 +106,9 @@ class Cell:
         '''
         #Ensure source's maintain 100 concentration
         if not self.source:
-            currentValues = [self.u1[time], self.u2[time]]
+            currentValues = [self.u1[time], self.u2[time], self.u3[time]]
             currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
             currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
             self.nextValues = currentValues
         else:
-            self.nextValues = [self.u1[time], self.u2[time]]
+            self.nextValues = [self.u1[time], self.u2[time], self.u3[time]]

@@ -63,6 +63,7 @@ class Grid:
             for cell in col:
                 cell.u1 = np.zeros(time)
                 cell.u2 = np.zeros(time)
+                cell.u3 = np.zeros(time)
                 if cell.position in self.sources['green']:
                     cell.u1[0] = 100
                 if cell.position in self.sources['blue']:

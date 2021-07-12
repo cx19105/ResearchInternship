@@ -116,32 +116,39 @@ class Window:
 
         #Iterating through each grid square
 
-        dataList = [[],[]]
+        dataList = [[],[],[]]
         for col in self.Grid.Grid:
             for cell in col:
                 dataList[0].append(cell.u1[time])
                 dataList[1].append(cell.u2[time])
+                dataList[2].append(cell.u3[time])
                 #if [col, row] not in (self.Grid.boundary['perm'] or self.Grid.boundary['full']):
                     #Finding the diffusion value and range for each source
                     #Avoiding divide by zero errors
 
         maxSourceOne = 100
         maxSourceTwo = 100
+        maxSourceThree = 100
 
         rangeOne = max(dataList[0]) - min(dataList[0])
         rangeTwo = max(dataList[1]) - min(dataList[1])
+        rangeThree = max(dataList[2]) - min(dataList[2])
+
         if rangeOne == 0:
             rangeOne = 1
         if rangeTwo == 0:
             rangeTwo = 1
+        if rangeThree == 0:
+            rangeThree = 1
 
         for col in self.Grid.Grid:
             for cell in col:
                 intensitySourceOne = max(255-255*cell.u1[time]/maxSourceOne,0)
                 intensitySourceTwo = max(255-255*cell.u2[time]/maxSourceTwo,0)
+                intensitySourceThree = max(255-255*cell.u3[time]/maxSourceThree, 0)
             
                     #Calculating the colour gradient between the two sources
-                colour = (255, intensitySourceOne, intensitySourceTwo)
+                colour = (intensitySourceThree, intensitySourceOne, intensitySourceTwo)
                 if cell.position in self.Grid.boundary['perm']:
                     colour = RED
                 if cell.position in self.Grid.boundary['full']:
@@ -204,6 +211,7 @@ class Window:
                 for cell in col:
                     cell.u1[timeStep+1] = cell.nextValues[0]
                     cell.u2[timeStep+1] = cell.nextValues[1]
+                    cell.u3[timeStep+1] = cell.nextValues[2]
         frame = 0
         while frame < maxTime:
             self.colourGrid(frame)
