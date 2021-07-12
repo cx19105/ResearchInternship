@@ -165,6 +165,7 @@ class Window:
 
         testDataU1 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
         testDataU2 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
+        testDataU3 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
         #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
         #Runs diffusion method for each source type
@@ -180,8 +181,10 @@ class Window:
                 for cell in col:
                     cell.u1[timeStep+1] = cell.nextValues[0]
                     cell.u2[timeStep+1] = cell.nextValues[1]
+                    cell.u3[timeStep+1] = cell.nextValues[2]
                     testDataU1[timeStep, self.Grid.Grid.index(col), col.index(cell)] = cell.u1[timeStep]
                     testDataU2[timeStep, self.Grid.Grid.index(col), col.index(cell)] = cell.u2[timeStep]
+                    testDataU3[timeStep, self.Grid.Grid.index(col), col.index(cell)] = cell.u3[timeStep]
         
         #Finds max and min for each source
         #Recolours the grid accordingly
@@ -189,7 +192,7 @@ class Window:
         self.Grid.sources = []
 
         #Uncomment following line to run test on total concentration
-        #testCode.testConcentration([testDataU1, testDataU2])
+        #testCode.testConcentration([testDataU1, testDataU2, testDataU3])
 
     def runModelAnimation(self, maxTime, timeInterval):
         frameList = []
