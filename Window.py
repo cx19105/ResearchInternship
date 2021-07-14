@@ -10,7 +10,7 @@ import numpy as np
 #import testCode
 
 class Window:
-    def __init__(self, grid, diffCoeff, time, animation, continuousSources):
+    def __init__(self, grid, diffCoeff, time, animation, continuousSources, timeStep):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.Grid = grid
@@ -29,6 +29,7 @@ class Window:
         self.animation = animation
         self.continuousSources = continuousSources
         self.selectedCells = []
+        self.timeInterval = timeStep
 
     def getGridSquare(self):
 
@@ -229,7 +230,7 @@ class Window:
         while frame < maxTime:
             self.colourGrid(frame)
             pygame.display.update()
-            time.sleep(0.1)
+            time.sleep(self.timeInterval)
             if frame >= maxTime-1:
                 frame = 0
             else:

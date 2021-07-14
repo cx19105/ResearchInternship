@@ -6,7 +6,7 @@ import InitialWindow
 entryBoxes = InitialWindow.makeWindow()
 
 values = {'Gridsize':[int(entryBoxes[0]), int(entryBoxes[1])], 'DiffCoeff':[float(entryBoxes[2]), float(entryBoxes[3]), float(entryBoxes[4]), float(entryBoxes[5])], 'time': int(entryBoxes[6]), 'filename':entryBoxes[7], 
-    'toggleSource':entryBoxes[12], 'animation':entryBoxes[13], 'file':entryBoxes[14], 'ReactTerms':[float(entryBoxes[8]), float(entryBoxes[9]), float(entryBoxes[10]), float(entryBoxes[11])]}
+    'toggleSource':entryBoxes[13], 'animation':entryBoxes[14], 'file':entryBoxes[15], 'ReactTerms':[float(entryBoxes[8]), float(entryBoxes[9]), float(entryBoxes[10]), float(entryBoxes[11])], 'timeStep':float(entryBoxes[12])}
 
 GRIDSIZE = values['Gridsize']
 DIFFCOEFF = {'green':values['DiffCoeff'][0], 'blue':values['DiffCoeff'][1], 'permBoundary':values['DiffCoeff'][2], 'edgeBoundary':values['DiffCoeff'][3]}
@@ -15,6 +15,7 @@ REACTTERMS = values['ReactTerms']
 TIME = values['time']
 CONTINUOUS_SOURCES = values['toggleSource']
 animation = values['animation']
+TIMESTEP = values['timeStep']
 
 selectedCoords = [[10,10],[20,20],[30,30]]
 
@@ -29,6 +30,6 @@ if values['file'] == True:
 else:
     grid = Grid(GRIDSIZE, REACTTERMS, selectedCoords)
 
-window = Window(grid, DIFFCOEFF, TIME, animation, CONTINUOUS_SOURCES)
+window = Window(grid, DIFFCOEFF, TIME, animation, CONTINUOUS_SOURCES, TIMESTEP)
 
 window.updateWindow()

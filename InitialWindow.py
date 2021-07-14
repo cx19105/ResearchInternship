@@ -97,6 +97,13 @@ def makeWindow():
     animationBool.grid(row=11, column=2)
     animationBool.select()
 
+    animationTimeStepLabel = tk.Label(window, text="Time Step")
+    animationTimeStepLabel.grid(row=11, column = 3)
+
+    animationTimeStepEntry = tk.Entry(window)
+    animationTimeStepEntry.grid(row=11, column=4, columnspan = 2)
+    animationTimeStepEntry.insert(0, 0.1)
+
     filenameBoolLabel = tk.Label(window, text='From File')
     filenameBoolLabel.grid(row=12, column=1)
 
@@ -150,7 +157,7 @@ def makeWindow():
     separator4 = ttk.Separator(window, orient='horizontal')
     separator4.grid(row=18, column = 0, columnspan = 8, sticky='ew', pady=5)
 
-    entries = [gridSizeEntryCol, gridSizeEntryRow, diffCoeffEntryS1, diffCoeffEntryS2, diffCoeffEntryB1, diffCoeffEntryB2, timeEntry, filenameEntry, reactTerm1Entry, reactTerm2Entry, reactTerm3Entry, reactTerm4Entry]
+    entries = [gridSizeEntryCol, gridSizeEntryRow, diffCoeffEntryS1, diffCoeffEntryS2, diffCoeffEntryB1, diffCoeffEntryB2, timeEntry, filenameEntry, reactTerm1Entry, reactTerm2Entry, reactTerm3Entry, reactTerm4Entry, animationTimeStepEntry]
     boolEntries = [toggleSourceBoolVar, animationBoolVar, filenameBoolVar]
 
     continueButton = tk.Button(window, text="Continue", command =lambda:returnEntries(entries, boolEntries))
