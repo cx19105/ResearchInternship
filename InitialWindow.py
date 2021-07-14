@@ -27,14 +27,14 @@ def makeWindow():
 
     gridSizeEntryCol = tk.Entry(window, width = 5)
     gridSizeEntryCol.grid(row=3, column = 2)
-    gridSizeEntryCol.insert(0, 50)
+    gridSizeEntryCol.insert(0, 25)
 
     gridSizeX = tk.Label(window, text='X')
     gridSizeX.grid(row=3, column=3)
 
     gridSizeEntryRow = tk.Entry(window, width = 5)
     gridSizeEntryRow.grid(row=3, column = 4)
-    gridSizeEntryRow.insert(0, 50)
+    gridSizeEntryRow.insert(0, 25)
 
     separator1 = ttk.Separator(window, orient='horizontal')
     separator1.grid(row=4, column = 0, columnspan = 8, sticky='ew', pady=5)
@@ -110,7 +110,7 @@ def makeWindow():
 
     filenameEntry = tk.Entry(window)
     filenameEntry.grid(row=13, column=2, columnspan = 3)
-    filenameEntry.insert(0, 'sampleGrid2.txt')
+    filenameEntry.insert(0, 'testGrid.txt')
 
     separator3 = ttk.Separator(window, orient='horizontal')
     separator3.grid(row=14, column = 0, columnspan = 8, sticky='ew', pady=5)
@@ -119,28 +119,28 @@ def makeWindow():
     reactTermText.config(font=('Courier', 22))
     reactTermText.grid(row=15, column = 1, padx = 5, pady = 5, columnspan=6)
 
-    reactTerm1Text = tk.Label(window, text="Source 1")
+    reactTerm1Text = tk.Label(window, text="Term 1")
     reactTerm1Text.grid(row=16, column = 0, columnspan = 2)
 
     reactTerm1Entry = tk.Entry(window, width = 5)
     reactTerm1Entry.grid(row=17, column = 0, columnspan = 2)
     reactTerm1Entry.insert(0, 0.8)
 
-    reactTerm2Text = tk.Label(window, text="Source 2")
+    reactTerm2Text = tk.Label(window, text="Term 2")
     reactTerm2Text.grid(row=16, column = 2, columnspan = 2)
 
     reactTerm2Entry = tk.Entry(window, width = 5)
     reactTerm2Entry.grid(row=17, column = 2, columnspan = 2)
     reactTerm2Entry.insert(0, 0.8)
 
-    reactTerm3Text = tk.Label(window, text="Boundary 1")
+    reactTerm3Text = tk.Label(window, text="Term 3")
     reactTerm3Text.grid(row=16, column = 4, columnspan = 2)
 
     reactTerm3Entry = tk.Entry(window, width = 5)
     reactTerm3Entry.grid(row=17, column = 4, columnspan = 2)
-    reactTerm3Entry.insert(0, 0.8)
+    reactTerm3Entry.insert(0, 0.0)
 
-    reactTerm4Text = tk.Label(window, text="Boundary 2")
+    reactTerm4Text = tk.Label(window, text="Term 4")
     reactTerm4Text.grid(row=16, column = 6, columnspan = 2)
 
     reactTerm4Entry = tk.Entry(window, width = 5)

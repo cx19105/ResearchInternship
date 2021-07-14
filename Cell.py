@@ -82,11 +82,15 @@ class Cell:
         '''
         Runs each of the reaction equations in the reaction equations file
         '''
-        reactions = [reactionEquations.h]
+        reactants = [z[0], z[1]]
+        product = z[2]
+        reactCoeffs = [1, 1, 2]
+        k = 2
         u_new = z
+        reactions = [[reactants, product, reactCoeffs, k]]
         #Iterates through each function
         for reaction in reactions:
-            u_new = reaction(u_new[0], u_new[1], u_new[2], self.rates)
+            u_new = reactionEquations.generalEquation(reaction[0], reaction[1], reaction[2], reaction[3], u_new)
         return u_new
 
 
@@ -111,6 +115,7 @@ class Cell:
             currentValues = [self.u1[time], self.u2[time], self.u3[time]]
             currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
             currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
+            print(currentValues)
             self.nextValues = currentValues
         else:
             self.nextValues = [self.u1[time], self.u2[time], self.u3[time]]

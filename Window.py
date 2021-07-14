@@ -46,16 +46,16 @@ class Window:
 
         #First checks if the grid square is already a source
         if gridSquare in self.Grid.sources['green']:
-            self.Grid.Sources['green'].remove(gridSquare)
+            self.Grid.sources['green'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         elif gridSquare in self.Grid.sources['blue']:
-            self.Grid.Sources['blue'].remove(gridSquare)
+            self.Grid.sources['blue'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         elif gridSquare in self.Grid.boundary['perm']:
-            self.Grid.Boundary['perm'].remove(gridSquare)
+            self.Grid.boundary['perm'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         elif gridSquare in self.Grid.boundary['full']:
-            self.Grid.Boundary['full'].remove(gridSquare)
+            self.Grid.boundary['full'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
             #Adds the grid square to the corresponding source dictionary key
@@ -112,6 +112,7 @@ class Window:
 
     def getValueOfCell(self):
         with open('SelectedCellValues.txt','a') as file:
+            file.truncate(0)
             for cell in self.Grid.selectedCells:
                 file.write("Cell: "+ str(cell.position)+'\n')
                 for time in range(0, len(cell.u1)):
