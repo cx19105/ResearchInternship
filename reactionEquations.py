@@ -25,34 +25,47 @@ def h(u1, u2, u3, rates):
     
     return [u1_new, u2_new, u3_new]
 
-def generalEquation(reactants, product, reactionCoeffs, k, u_new):
+def getEquations(u1, u2, u3):
     '''
+    Function to store all of the reactions for each cell
+    Form: [[equation of form aA + bB = cC + dD], Reactants, Products, [a,b,c,d], k]
+    '''
+    reactions = []
+
+    #reactions.append([['u1','u2','u3', None], [u1, u2], [u3, None], [1,1,2,0], 2])
+    reactions.append([['u3', None, 'u1', 'u2'], [u3, None], [u1, u2], [0,2,0.5, 1.5], 1.5])
+    
+    return reactions
+
+def generalEquation(reactants, products, reactionCoeffs, k, u_new):
+    '''
+    equation: The equation in string form so the sources can be correctly assigned to
     reactants: [conc1, conc2] an array of the two concentrations of the reactants in the equation
-    products: conc3 the concentration of the outputted chemical
-    reactionCoeffs: [a, b, c] the coeffs in the equation aA + bB = cC 
+    products: [conc3, conc4] the concentration of the outputted chemicals
+    reactionCoeffs: [a, b, c, d] the coeffs in the equation aA + bB = cC + dD
     where A,B and C are the products and reactants
     k: rate constant
     '''
 
     A = reactants[0]
     B = reactants[1]
-    C = product
-    [a,b,c] = reactionCoeffs
+    C = products[0]
+    D = products[1]
+    [a,b,c,d] = reactionCoeffs
 
     x, y = 0.01*a, 0.01*b
+    if A != None and B != None:
+        v = k * A**x * B**y
+    elif A == None:
+        v = k*B**y
+    else:
+        v = k*A**y
 
-    v = k * A**x * B**y 
-    
     dA = -v*a
     dB = -v*b
     dC = v*c
+    dD = v*d
+    
+    new_u = [dA, dB, dC, dD]
 
-    u_new[0] += dA
-    u_new[1] += dB
-    u_new[2] += dC
-
-    for i in range(0, len(u_new)):
-        if u_new[i] < 0:
-            u_new[i] = 0
-
-    return u_new
+    return new_u

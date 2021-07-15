@@ -44,56 +44,6 @@ class Cell:
 
         return [u1, u2, u3]
 
-    '''def ode_FE(self, f, g, u_0, dt, T):
-        
-        Forward euler method for solving ODE for reaction term
-        
-        N_t = int(round(float(T)/dt))
-        u1 = np.zeros(N_t + 1)
-        u2 = np.zeros(N_t + 1)
-        t = np.linspace(0, N_t * dt, len(u1))
-        u1[0] = u_0[0]
-        u2[0] = u_0[1]
-        for n in range(N_t):
-            u1[n+1] = u1[n] + dt*f(u1[n], u2[n], t[n])
-            #u2[n+1] = u2[n] + dt*g(u1[n], u2[n], t[n])
-        print(u1, u2)
-        return u1, u2, t
-
-    def reactionEq(self, z):
-        u1 = z[0]
-        u2 = z[1]
-        #Insert differential equation for reaction
-        #Initially using u1 + u2 = 2u1
-
-        def f(u1, u2, t):
-            return -0.4*u1 + u2
-
-        def g(u1, u2, t):
-            return u2
-
-        u1, u2, t = self.ode_FE(f=f, g=g, u_0 = z, dt=0.1, T=11)
-
-        return [u1[-1], u2[-1]]
-        #Fraction of chemicals'''
-
-
-    def reactionEq(self, z):
-        '''
-        Runs each of the reaction equations in the reaction equations file
-        '''
-        reactants = [z[0], z[1]]
-        product = z[2]
-        reactCoeffs = [1, 1, 2]
-        k = 2
-        u_new = z
-        reactions = [[reactants, product, reactCoeffs, k]]
-        #Iterates through each function
-        for reaction in reactions:
-            u_new = reactionEquations.generalEquation(reaction[0], reaction[1], reaction[2], reaction[3], u_new)
-        return u_new
-
-
     def reactionUpdate(self, neighbouringCells, time, currentValues):
         '''
         Runs the reaction model for each cell in the grid
@@ -101,9 +51,25 @@ class Cell:
         u1 = currentValues[0]
         u2 = currentValues[1]
         u3 = currentValues[2]
-        z0 = [u1, u2, u3]
-        z = self.reactionEq(z0)
-        return z
+
+        for reaction in reactionEquations.getEquations(u1, u2, u3):
+            new_u = reactionEquations.generalEquation(reaction[1], reaction[2], reaction[3], reaction[4], currentValues)
+            for i in range(0, len(new_u)):
+                
+                if reaction[0][i] == 'u1':
+                    u1 += new_u[i]
+                elif reaction[0][i] == 'u2':
+                    u2 += new_u[i]
+                elif reaction[0][i] == 'u3':
+                    u3 += new_u[i]
+
+        currentValues = [u1, u2, u3]
+
+        for i in range(0, len(currentValues)):
+            if currentValues[i] < 0:
+                currentValues[i] = 0
+
+        return currentValues
 
     def update(self, neighbouringCells, gamma, time):
         '''
@@ -115,7 +81,6 @@ class Cell:
             currentValues = [self.u1[time], self.u2[time], self.u3[time]]
             currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
             currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
-            print(currentValues)
             self.nextValues = currentValues
         else:
             self.nextValues = [self.u1[time], self.u2[time], self.u3[time]]
