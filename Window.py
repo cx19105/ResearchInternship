@@ -1,4 +1,4 @@
-from Colours import WHITE, GREEN, BLUE, BLACK, RED, YELLOW
+from Colours import WHITE, GREEN, BLUE, BLACK, RED, YELLOW, PURPLE
 import pygame
 import tkinter
 import math
@@ -22,9 +22,9 @@ class Window:
         self.windowHeight = (self.Grid.GridSquareSize[1]+self.Grid.Margin)*self.Grid.Size[1] + self.Grid.Margin + self.BottomMargin
         self.screen = pygame.display.set_mode((self.windowWidth, self.windowHeight))
         #Setting the location and sizes of the buttons
-        self.buttons = {'green':[0, self.windowWidth/5], 'blue':[self.windowWidth/5, 2*self.windowWidth/5], 'red':[2*self.windowWidth/5, 3*self.windowWidth/5], 'yellow':[3*self.windowWidth/5, 4*self.windowWidth/5], 'black':[4*self.windowWidth/5, self.windowWidth]}
+        self.buttons = {'purple':[0, self.windowWidth/5], 'yellow':[self.windowWidth/5, 2*self.windowWidth/5], 'red':[2*self.windowWidth/5, 3*self.windowWidth/5], 'green':[3*self.windowWidth/5, 4*self.windowWidth/5], 'black':[4*self.windowWidth/5, self.windowWidth]}
         self.screen.fill(WHITE)
-        self.currentSource = GREEN #Currently selected button
+        self.currentSource = PURPLE #Currently selected button
         self.running = False
         self.animation = animation
         self.continuousSources = continuousSources
@@ -46,11 +46,11 @@ class Window:
         '''Function that adds a source to the list if a grid square is clicked'''
 
         #First checks if the grid square is already a source
-        if gridSquare in self.Grid.sources['green']:
-            self.Grid.sources['green'].remove(gridSquare)
+        if gridSquare in self.Grid.sources['purple']:
+            self.Grid.sources['purple'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
-        elif gridSquare in self.Grid.sources['blue']:
-            self.Grid.sources['blue'].remove(gridSquare)
+        elif gridSquare in self.Grid.sources['yellow']:
+            self.Grid.sources['yellow'].remove(gridSquare)
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         elif gridSquare in self.Grid.boundary['perm']:
             self.Grid.boundary['perm'].remove(gridSquare)
@@ -60,13 +60,13 @@ class Window:
             self.Grid.colourGrid(gridSquare, self.screen, WHITE)
         else:
             #Adds the grid square to the corresponding source dictionary key
-            if self.currentSource == GREEN:
-                self.Grid.sources['green'].append(gridSquare)
-            elif self.currentSource == BLUE:
-                self.Grid.sources['blue'].append(gridSquare)
+            if self.currentSource == YELLOW:
+                self.Grid.sources['yellow'].append(gridSquare)
+            elif self.currentSource == PURPLE:
+                self.Grid.sources['purple'].append(gridSquare)
             elif self.currentSource == RED:
                 self.Grid.boundary['perm'].append(gridSquare)
-            elif self.currentSource == YELLOW:
+            elif self.currentSource == GREEN:
                 self.Grid.boundary['full'].append(gridSquare)
             #Recreate the grid with the updated grid colours
             self.Grid.colourGrid(gridSquare, self.screen, self.currentSource)
@@ -77,14 +77,14 @@ class Window:
         '''Adds all the buttons from the buttons dict to the window'''
 
         for key, val in self.buttons.items():
-            if key == 'green':
-                colour = GREEN
-            elif key == 'blue':
-                colour = BLUE
+            if key == 'yellow':
+                colour = YELLOW
+            elif key == 'purple':
+                colour = PURPLE
             elif key == 'red':
                 colour = RED
-            elif key == 'yellow':
-                colour = YELLOW
+            elif key == 'green':
+                colour = GREEN
             else:
                 colour = BLACK
             pygame.draw.rect(self.screen, colour, [val[0], self.windowHeight-self.BottomMargin, val[1]-val[0], self.BottomMargin])
@@ -158,11 +158,11 @@ class Window:
                 intensitySourceThree = max(255-255*cell.u3[time]/maxSourceThree, 0)
             
                     #Calculating the colour gradient between the two sources
-                colour = (intensitySourceThree, intensitySourceOne, intensitySourceTwo)
+                colour = (intensitySourceThree, intensitySourceTwo, intensitySourceOne)
                 if cell.position in self.Grid.boundary['perm']:
                     colour = RED
                 if cell.position in self.Grid.boundary['full']:
-                    colour = YELLOW
+                    colour = GREEN
                 self.Grid.colourGrid(cell.position, self.screen, colour)
 
 
@@ -177,7 +177,7 @@ class Window:
         testDataU2 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
         testDataU3 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
         #Find the minimum dt, as it needs to be the same for all sources
-        dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
+        dt = min((1/(4*self.diffCoeff['yellow'])), (1/(4*self.diffCoeff['purple'])))
         #Runs diffusion method for each source type
         self.Grid.boundaryConditions(time)
         gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
@@ -212,7 +212,7 @@ class Window:
         if self.continuousSources:
             self.Grid.updateSources()
 
-        dt = min((1/(4*self.diffCoeff['green'])), (1/(4*self.diffCoeff['blue'])))
+        dt = min((1/(4*self.diffCoeff['yellow'])), (1/(4*self.diffCoeff['purple'])))
         self.Grid.boundaryConditions(maxTime)
         gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
         for timeStep in range(0, maxTime-1):
@@ -249,14 +249,14 @@ class Window:
                         self.runModelAnimation(self.maxTime, 10)
                     else:
                         self.runModel(self.maxTime)
-                elif key == 'green':
-                    self.currentSource = GREEN
-                elif key == 'blue':
-                    self.currentSource = BLUE
-                elif key == 'red':
-                    self.currentSource = RED
                 elif key == 'yellow':
                     self.currentSource = YELLOW
+                elif key == 'purple':
+                    self.currentSource = PURPLE
+                elif key == 'red':
+                    self.currentSource = RED
+                elif key == 'green':
+                    self.currentSource = GREEN
 
 
     def updateWindow(self):

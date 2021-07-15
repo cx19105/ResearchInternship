@@ -32,9 +32,15 @@ def getEquations(u1, u2, u3):
     '''
     reactions = []
 
-    #reactions.append([['u1','u2','u3', None], [u1, u2], [u3, None], [1,1,2,0], 2])
-    reactions.append([['u3', None, 'u1', 'u2'], [u3, None], [u1, u2], [0,2,0.5, 1.5], 1.5])
-    
+    # A + B -> C
+    reactions.append([['u1','u2','u3', None], [u1, u2], [u3, None], [1,1,2,0], 2])
+
+    # C -> A + B
+    #reactions.append([['u3', None, 'u1', 'u2'], [u3, None], [u1, u2], [2,0,0.5, 1.5], 1.5])
+
+    # A -> B
+    #reactions.append([['u1', None, 'u2', None], [u1, None], [u2, None], [1, 0, 1, 0], 1])
+
     return reactions
 
 def generalEquation(reactants, products, reactionCoeffs, k, u_new):
@@ -59,7 +65,7 @@ def generalEquation(reactants, products, reactionCoeffs, k, u_new):
     elif A == None:
         v = k*B**y
     else:
-        v = k*A**y
+        v = k*A**x
 
     dA = -v*a
     dB = -v*b

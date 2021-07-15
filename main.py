@@ -9,7 +9,7 @@ values = {'Gridsize':[int(entryBoxes[0]), int(entryBoxes[1])], 'DiffCoeff':[floa
     'toggleSource':entryBoxes[13], 'animation':entryBoxes[14], 'file':entryBoxes[15], 'ReactTerms':[float(entryBoxes[8]), float(entryBoxes[9]), float(entryBoxes[10]), float(entryBoxes[11])], 'timeStep':float(entryBoxes[12])}
 
 GRIDSIZE = values['Gridsize']
-DIFFCOEFF = {'green':values['DiffCoeff'][0], 'blue':values['DiffCoeff'][1], 'permBoundary':values['DiffCoeff'][2], 'edgeBoundary':values['DiffCoeff'][3]}
+DIFFCOEFF = {'purple':values['DiffCoeff'][0], 'yellow':values['DiffCoeff'][1], 'permBoundary':values['DiffCoeff'][2], 'edgeBoundary':values['DiffCoeff'][3]}
 REACTTERMS = values['ReactTerms']
 
 TIME = values['time']

@@ -25,9 +25,9 @@ class FileReader:
                 if cell == '1':
                     grid.boundary['perm'].append([col+margin, row+margin])
                 elif cell == '2':
-                    grid.sources['green'].append([col+margin, row+margin])
+                    grid.sources['yellow'].append([col+margin, row+margin])
                 elif cell == '3':
-                    grid.sources['blue'].append([col+margin, row+margin])
+                    grid.sources['purple'].append([col+margin, row+margin])
                 elif cell == '4':
                     grid.boundary['full'].append([col+margin, row+margin])
     

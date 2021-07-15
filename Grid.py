@@ -1,5 +1,5 @@
 
-from Colours import BLACK, WHITE, GREEN, BLUE, RED, YELLOW
+from Colours import BLACK, WHITE, GREEN, BLUE, RED, YELLOW, PURPLE
 import pygame
 from Cell import Cell
 import numpy as np
@@ -10,7 +10,7 @@ class Grid:
         self.Grid = []
         self.GridSquareSize = [20,20] #Size in pixels of each gridsquare
         self.Margin = 1
-        self.sources = {'green':[], 'blue':[]}
+        self.sources = {'purple':[], 'yellow':[]}
         self.boundary = {'perm':[], 'full':[]}
         self.selectedCells = []
         self.create(reactionRates, selectedCoords)
@@ -44,12 +44,12 @@ class Grid:
             self.colourGrid(boundary, display, RED)
             self.Grid[boundary[0]][boundary[1]].boundary = diffCoeff['permBoundary']
         for boundary in self.boundary['full']:
-            self.colourGrid(boundary, display, YELLOW)
+            self.colourGrid(boundary, display, GREEN)
             self.Grid[boundary[0]][boundary[1]].boundary = diffCoeff['edgeBoundary']
-        for source in self.sources['green']:
-            self.colourGrid(source, display, GREEN)
-        for source in self.sources['blue']:
-            self.colourGrid(source, display, BLUE)
+        for source in self.sources['yellow']:
+            self.colourGrid(source, display, YELLOW)
+        for source in self.sources['purple']:
+            self.colourGrid(source, display, PURPLE)
 
     def colourGrid(self, gridSquare, display, colour):
 
@@ -66,17 +66,17 @@ class Grid:
                 cell.u1 = np.zeros(time)
                 cell.u2 = np.zeros(time)
                 cell.u3 = np.zeros(time)
-                if cell.position in self.sources['green']:
+                if cell.position in self.sources['yellow']:
                     cell.u1[0] = 100
-                if cell.position in self.sources['blue']:
+                if cell.position in self.sources['purple']:
                     cell.u2[0] = 100
 
     def gammaCalculation(self, dt, diffCoeff):
-        gamma = [(diffCoeff['green'] * dt), (diffCoeff['blue'] * dt), (((diffCoeff['green'] + diffCoeff['blue'])/2) * dt)]
+        gamma = [(diffCoeff['yellow'] * dt), (diffCoeff['purple'] * dt), (((diffCoeff['yellow'] + diffCoeff['purple'])/2) * dt)]
         return gamma
 
     def updateSources(self):
         for col in self.Grid:
             for cell in col:
-                if (cell.position in self.sources['green'] or cell.position in self.sources['blue']):
+                if (cell.position in self.sources['yellow'] or cell.position in self.sources['purple']):
                     cell.source = True
