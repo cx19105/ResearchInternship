@@ -12,6 +12,7 @@ class Cell:
         self.u1 = []
         self.u2 = []
         self.u3 = []
+        self.u4 = []
         self.nextValues = []
         self.boundary = 1
         self.source = False
@@ -36,13 +37,14 @@ class Cell:
         u1 = gamma[0] * (sum(neighbourSum1) - 4*currentValues[0]) + currentValues[0]
         u2 = gamma[1] * (sum(neighbourSum2) - 4*currentValues[1]) + currentValues[1]
         u3 = gamma[2] * (sum(neighbourSum3) - 4*currentValues[2]) + currentValues[2]
+        u4 = currentValues[3]
 
         #Need to update to get better boundary diffusion
         u1 *= self.boundary
         u2 *= self.boundary
         u3 *= self.boundary
 
-        return [u1, u2, u3]
+        return [u1, u2, u3, u4]
 
     def reactionUpdate(self, neighbouringCells, time, currentValues):
         '''
@@ -51,8 +53,9 @@ class Cell:
         u1 = currentValues[0]
         u2 = currentValues[1]
         u3 = currentValues[2]
+        u4 = currentValues[3]
 
-        for reaction in reactionEquations.getEquations(u1, u2, u3):
+        for reaction in reactionEquations.getEquations(u1, u2, u3, u4):
             new_u = reactionEquations.generalEquation(reaction[1], reaction[2], reaction[3], reaction[4], currentValues)
             for i in range(0, len(new_u)):
                 
@@ -62,8 +65,10 @@ class Cell:
                     u2 += new_u[i]
                 elif reaction[0][i] == 'u3':
                     u3 += new_u[i]
+                elif reaction[0][i] == 'u4':
+                    u4 += new_u[i]
 
-        currentValues = [u1, u2, u3]
+        currentValues = [u1, u2, u3, u4]
 
         for i in range(0, len(currentValues)):
             if currentValues[i] < 0:
@@ -78,9 +83,9 @@ class Cell:
         '''
         #Ensure source's maintain 100 concentration
         if not self.source:
-            currentValues = [self.u1[time], self.u2[time], self.u3[time]]
+            currentValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]
             currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
             currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
             self.nextValues = currentValues
         else:
-            self.nextValues = [self.u1[time], self.u2[time], self.u3[time]]
+            self.nextValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]

@@ -25,7 +25,7 @@ def h(u1, u2, u3, rates):
     
     return [u1_new, u2_new, u3_new]
 
-def getEquations(u1, u2, u3):
+def getEquations(u1, u2, u3, u4):
     '''
     Function to store all of the reactions for each cell
     Form: [[equation of form aA + bB = cC + dD], Reactants, Products, [a,b,c,d], k]
@@ -33,13 +33,22 @@ def getEquations(u1, u2, u3):
     reactions = []
 
     # A + B -> C
-    reactions.append([['u1','u2','u3', None], [u1, u2], [u3, None], [1,1,2,0], 2])
+    #reactions.append([['u1','u2','u3', None], [u1, u2], [u3, None], [1,1,2,0], 2])
 
     # C -> A + B
     #reactions.append([['u3', None, 'u1', 'u2'], [u3, None], [u1, u2], [2,0,0.5, 1.5], 1.5])
 
     # A -> B
     #reactions.append([['u1', None, 'u2', None], [u1, None], [u2, None], [1, 0, 1, 0], 1])
+
+    '''Michaelis-Menten Kinetics
+    u1 = E
+    u2 = S
+    u3 = P
+    u4 = ES
+    '''
+    reactions.append([['u1', 'u2', 'u4','None'], [u1, u2], [u4, None],[1, 1, 1, 0], 1])
+    reactions.append([['u4', None, 'u1', 'u3'], [u4, None], [u1, u3], [1, 0, 1, 1], 1])
 
     return reactions
 

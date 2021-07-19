@@ -90,12 +90,12 @@ class Window:
             pygame.draw.rect(self.screen, colour, [val[0], self.windowHeight-self.BottomMargin, val[1]-val[0], self.BottomMargin])
 
 
-    def createGraph(self, data):
+    def createGraph(self, cell):
 
         '''Function used for testing the model'''
-
-        x = range(0, 40)
-        plt.plot(x,data)
+        timeSpan = range(0, self.maxTime)
+        plt.plot(timeSpan, cell.u1, '-r', cell.u2, '-b', cell.u3, '-g', cell.u4, '-k')
+        plt.legend(['Source 1', 'Source 2','Source 3', 'Source 4'])
         plt.show()
 
     def getNeighbouringCells(self, cellPosition, maxSize):
@@ -225,7 +225,11 @@ class Window:
                     cell.u1[timeStep+1] = cell.nextValues[0]
                     cell.u2[timeStep+1] = cell.nextValues[1]
                     cell.u3[timeStep+1] = cell.nextValues[2]
+                    cell.u4[timeStep+1] = cell.nextValues[3]
         self.getValueOfCell()
+
+        self.createGraph(self.Grid.selectedCells[0])
+
         frame = 0
         while frame < maxTime:
             self.colourGrid(frame)
