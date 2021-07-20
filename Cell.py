@@ -84,8 +84,9 @@ class Cell:
         #Ensure source's maintain 100 concentration
         if not self.source:
             currentValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]
-            currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
+            #currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
             currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
             self.nextValues = currentValues
+            print(self.nextValues)
         else:
             self.nextValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]

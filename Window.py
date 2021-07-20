@@ -10,7 +10,7 @@ import numpy as np
 #import testCode
 
 class Window:
-    def __init__(self, grid, diffCoeff, time, animation, continuousSources, timeStep):
+    def __init__(self, grid, diffCoeff, time, animation, continuousSources, timeStep, test):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.Grid = grid
@@ -30,6 +30,7 @@ class Window:
         self.continuousSources = continuousSources
         self.selectedCells = []
         self.timeInterval = timeStep
+        self.test = test
 
     def getGridSquare(self):
 
@@ -93,6 +94,7 @@ class Window:
     def createGraph(self, cell):
 
         '''Function used for testing the model'''
+        
         timeSpan = range(0, self.maxTime)
         plt.plot(timeSpan, cell.u1, '-r', cell.u2, '-b', cell.u3, '-g', cell.u4, '-k')
         plt.legend(['Source 1', 'Source 2','Source 3', 'Source 4'])
@@ -171,7 +173,7 @@ class Window:
         '''Function that performs the diffusion method on the sources'''
 
         if self.continuousSources:
-            self.Grid.updateSources()
+            self.Grid.updateSources(self.test)
 
         testDataU1 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
         testDataU2 = np.zeros((time, self.Grid.Size[0], self.Grid.Size[1]))
@@ -179,7 +181,7 @@ class Window:
         #Find the minimum dt, as it needs to be the same for all sources
         dt = min((1/(4*self.diffCoeff['yellow'])), (1/(4*self.diffCoeff['purple'])))
         #Runs diffusion method for each source type
-        self.Grid.boundaryConditions(time)
+        self.Grid.boundaryConditions(time, self.test)
         gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
         for timeStep in range(0, time-1):
             testDataTimeStep = [[],[]]
@@ -200,6 +202,8 @@ class Window:
         #Recolours the grid accordingly
         self.colourGrid(self.time)
         self.Grid.sources = []
+        if self.test:
+            self.createGraph(self.Grid.selectedCells[0])
 
         #Uncomment following line to run test on total concentration
         #testCode.testConcentration([testDataU1, testDataU2, testDataU3])
@@ -210,10 +214,10 @@ class Window:
         dataList = []
 
         if self.continuousSources:
-            self.Grid.updateSources()
+            self.Grid.updateSources(self.test)
 
         dt = min((1/(4*self.diffCoeff['yellow'])), (1/(4*self.diffCoeff['purple'])))
-        self.Grid.boundaryConditions(maxTime)
+        self.Grid.boundaryConditions(maxTime, self.test)
         gamma = self.Grid.gammaCalculation(dt, self.diffCoeff)
         for timeStep in range(0, maxTime-1):
             for col in self.Grid.Grid:

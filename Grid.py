@@ -60,24 +60,32 @@ class Grid:
         ypos = (self.Margin + self.GridSquareSize[1])*gridSquare[1] + self.Margin
         pygame.draw.rect(display, colour, [xpos, ypos, self.GridSquareSize[0], self.GridSquareSize[1]])
 
-    def boundaryConditions(self, time):
+    def boundaryConditions(self, time, test):
         for col in self.Grid:
             for cell in col:
                 cell.u1 = np.zeros(time)
                 cell.u2 = np.zeros(time)
                 cell.u3 = np.zeros(time)
                 cell.u4 = np.zeros(time)
-                if cell.position in self.sources['yellow']:
-                    cell.u1[0] = 100
-                if cell.position in self.sources['purple']:
-                    cell.u2[0] = 100
+                if test:
+                    if cell.position in self.sources['yellow']:
+                        cell.u1[0] = 50
+                    if cell.position in self.sources['purple']:
+                        cell.u2[0] = 50
+                else:
+                    if cell.position in self.sources['yellow']:
+                        cell.u1[0] = 100
+                    if cell.position in self.sources['purple']:
+                        cell.u2[0] = 100
+        
 
     def gammaCalculation(self, dt, diffCoeff):
         gamma = [(diffCoeff['yellow'] * dt), (diffCoeff['purple'] * dt), (((diffCoeff['yellow'] + diffCoeff['purple'])/2) * dt)]
         return gamma
 
-    def updateSources(self):
+    def updateSources(self, test):
         for col in self.Grid:
             for cell in col:
                 if (cell.position in self.sources['yellow'] or cell.position in self.sources['purple']):
-                    cell.source = True
+                    if test == False:
+                        cell.source = True
