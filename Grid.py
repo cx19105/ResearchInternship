@@ -69,9 +69,9 @@ class Grid:
                 cell.u4 = np.zeros(time)
                 if test:
                     if cell.position in self.sources['yellow']:
-                        cell.u1[0] = 50
+                        cell.u1[0] = 25
                     if cell.position in self.sources['purple']:
-                        cell.u2[0] = 50
+                        cell.u2[0] = 75
                 else:
                     if cell.position in self.sources['yellow']:
                         cell.u1[0] = 100
