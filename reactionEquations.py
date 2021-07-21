@@ -48,9 +48,9 @@ def getEquations(u1, u2, u3, u4):
     u4 = ES
     '''
 
-    k_f = 1.5
-    k_r = 1
-    k_cat = 0.5
+    k_f = 2.6
+    k_r = 1.3
+    k_cat = 0.7
 
     reactions.append([['u1', 'u2', 'u4','None'], [u1, u2], [u4, None],[1, 1, 1, 0], k_f])
     reactions.append([['u4','None','u1','u2'], [u4, None], [u1, u2], [1,0,1,1], k_r])

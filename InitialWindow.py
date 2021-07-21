@@ -89,6 +89,13 @@ def makeWindow():
     toggleSourceBool.grid(row=10, column=2)
     toggleSourceBool.select()
 
+    toggleTestLabel = tk.Label(window, text='Test mode')
+    toggleTestLabel.grid(row=10,column = 3)
+
+    toggleTestBoolVar = tk.BooleanVar()
+    toggleTestBool = tk.Checkbutton(window, variable = toggleTestBoolVar, offvalue = False)
+    toggleTestBool.grid(row=10, column = 4)
+
     animationBoolLabel = tk.Label(window, text="Animation")
     animationBoolLabel.grid(row=11, column=1)
 
@@ -158,7 +165,7 @@ def makeWindow():
     separator4.grid(row=18, column = 0, columnspan = 8, sticky='ew', pady=5)
 
     entries = [gridSizeEntryCol, gridSizeEntryRow, diffCoeffEntryS1, diffCoeffEntryS2, diffCoeffEntryB1, diffCoeffEntryB2, timeEntry, filenameEntry, reactTerm1Entry, reactTerm2Entry, reactTerm3Entry, reactTerm4Entry, animationTimeStepEntry]
-    boolEntries = [toggleSourceBoolVar, animationBoolVar, filenameBoolVar]
+    boolEntries = [toggleSourceBoolVar, animationBoolVar, filenameBoolVar, toggleTestBoolVar]
 
     continueButton = tk.Button(window, text="Continue", command =lambda:returnEntries(entries, boolEntries))
     continueButton.grid(row=19, column=3, columnspan=2, padx = 5, pady =5)

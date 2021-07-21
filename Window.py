@@ -188,7 +188,7 @@ class Window:
             for col in self.Grid.Grid:
                 for cell in col:
                     neighbouringCells = self.getNeighbouringCells(cell.position, self.Grid.Size)
-                    cell.update(neighbouringCells, gamma, timeStep)
+                    cell.update(neighbouringCells, gamma, timeStep, self.test)
             for col in self.Grid.Grid:
                 for cell in col:
                     cell.u1[timeStep+1] = cell.nextValues[0]
@@ -223,7 +223,7 @@ class Window:
             for col in self.Grid.Grid:
                 for cell in col:
                     neighbouringCells = self.getNeighbouringCells(cell.position, self.Grid.Size)
-                    cell.update(neighbouringCells, gamma, timeStep)
+                    cell.update(neighbouringCells, gamma, timeStep, self.test)
             for col in self.Grid.Grid:
                 for cell in col:
                     cell.u1[timeStep+1] = cell.nextValues[0]

@@ -76,7 +76,7 @@ class Cell:
 
         return currentValues
 
-    def update(self, neighbouringCells, gamma, time):
+    def update(self, neighbouringCells, gamma, time, test):
         '''
         Update the concentrations of each cell using both the diffusion and
         reaction models
@@ -84,9 +84,9 @@ class Cell:
         #Ensure source's maintain 100 concentration
         if not self.source:
             currentValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]
-            #currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
+            if test == False:
+                currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
             currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
             self.nextValues = currentValues
-            print(self.nextValues)
         else:
             self.nextValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]
