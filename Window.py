@@ -10,6 +10,9 @@ import numpy as np
 #import testCode
 
 class Window:
+    '''
+    Class to hold the grid window along with functions to draw and colour each of the grid squares
+    '''
     def __init__(self, grid, diffCoeff, time, animation, continuousSources, timeStep, test):
         pygame.init()
         self.clock = pygame.time.Clock()
@@ -138,9 +141,9 @@ class Window:
                     #Finding the diffusion value and range for each source
                     #Avoiding divide by zero errors
 
-        maxSourceOne = 100
-        maxSourceTwo = 100
-        maxSourceThree = 100
+        maxSourceOne = 1
+        maxSourceTwo = 1
+        maxSourceThree = 1
 
         rangeOne = max(dataList[0]) - min(dataList[0])
         rangeTwo = max(dataList[1]) - min(dataList[1])
@@ -209,6 +212,12 @@ class Window:
         #testCode.testConcentration([testDataU1, testDataU2, testDataU3])
 
     def runModelAnimation(self, maxTime, timeInterval):
+        '''
+        Runs the model for one time step at a time, then returns each of them as a frame
+        to play consecutively as a video animation
+        Input the final time and the sleep time between each frame
+        '''
+
         frameList = []
         rangeList = []
         dataList = []
@@ -231,8 +240,8 @@ class Window:
                     cell.u3[timeStep+1] = cell.nextValues[2]
                     cell.u4[timeStep+1] = cell.nextValues[3]
         self.getValueOfCell()
-
-        self.createGraph(self.Grid.selectedCells[0])
+        if self.test == True:
+            self.createGraph(self.Grid.selectedCells[0])
 
         frame = 0
         while frame < maxTime:

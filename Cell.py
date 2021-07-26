@@ -26,23 +26,30 @@ class Cell:
         neighbourSum1 = []
         neighbourSum2 = []
         neighbourSum3 = []
+        #neighbourSum4 = []
         for neighbour in neighbouringCells:
             if neighbour != None:
                 #Find the concentration in the surrounding cells for each source
                 neighbourSum1.append(neighbour.u1[time])
                 neighbourSum2.append(neighbour.u2[time])
                 neighbourSum3.append(neighbour.u3[time])
+                #neighbourSum4.append(neighbour.u4[time])
 
         #Runs the diffusion numerical method, partial differential equation
         u1 = gamma[0] * (sum(neighbourSum1) - 4*currentValues[0]) + currentValues[0]
         u2 = gamma[1] * (sum(neighbourSum2) - 4*currentValues[1]) + currentValues[1]
-        u3 = gamma[2] * (sum(neighbourSum3) - 4*currentValues[2]) + currentValues[2]
+        if (sum(neighbourSum3) - 4*currentValues[2]) < 0:
+            u3 = currentValues[2]
+        else:
+            u3 = gamma[2] * (sum(neighbourSum3) - 4*currentValues[2]) + currentValues[2]
         u4 = currentValues[3]
 
         #Need to update to get better boundary diffusion
-        u1 *= self.boundary
+        '''u1 *= self.boundary
         u2 *= self.boundary
         u3 *= self.boundary
+'''     
+        print(str(currentValues[2]), str(u3), str(sum(neighbourSum3)))
 
         return [u1, u2, u3, u4]
 
@@ -73,7 +80,6 @@ class Cell:
         for i in range(0, len(currentValues)):
             if currentValues[i] < 0:
                 currentValues[i] = 0
-
         return currentValues
 
     def update(self, neighbouringCells, gamma, time, test):
@@ -84,6 +90,7 @@ class Cell:
         #Ensure source's maintain 100 concentration
         if not self.source:
             currentValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]
+            
             if test == False:
                 currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
             currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)

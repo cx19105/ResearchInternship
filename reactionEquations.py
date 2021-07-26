@@ -48,13 +48,13 @@ def getEquations(u1, u2, u3, u4):
     u4 = ES
     '''
 
-    k_f = 2.6
-    k_r = 1.3
-    k_cat = 0.7
+    k_f = 0.7
+    k_r = 0.15
+    k_cat = 0.1
 
     reactions.append([['u1', 'u2', 'u4','None'], [u1, u2], [u4, None],[1, 1, 1, 0], k_f])
     reactions.append([['u4','None','u1','u2'], [u4, None], [u1, u2], [1,0,1,1], k_r])
-    reactions.append([['u4', None, 'u1', 'u3'], [u4, None], [u1, u3], [1, 0, 1, 1], k_cat])
+    reactions.append([['u4', 'None', 'u1', 'u3'], [u4, None], [u1, u3], [1, 0, 1, 1], k_cat])
 
     return reactions
 
@@ -74,7 +74,7 @@ def generalEquation(reactants, products, reactionCoeffs, k, u_new):
     D = products[1]
     [a,b,c,d] = reactionCoeffs
 
-    x, y = 0.01*a, 0.01*b
+    x, y = a, b
     if A != None and B != None:
         v = k * A**x * B**y
     elif A == None:
@@ -89,4 +89,9 @@ def generalEquation(reactants, products, reactionCoeffs, k, u_new):
     
     new_u = [dA, dB, dC, dD]
 
+    #print("A: %d, B: %d, C: %d, D:%d" %(A,B,C,D))
+    '''print("x: %d, y: %d" %(x,y))
+    print(v)
+    print("A:"+str(A), "B:"+str(B))
+'''
     return new_u

@@ -69,18 +69,18 @@ class Grid:
                 cell.u4 = np.zeros(time)
                 if test:
                     if cell.position in self.sources['yellow']:
-                        cell.u1[0] = 25
+                        cell.u1[0] = 0.25
                     if cell.position in self.sources['purple']:
-                        cell.u2[0] = 75
+                        cell.u2[0] = 0.75
                 else:
                     if cell.position in self.sources['yellow']:
-                        cell.u1[0] = 100
+                        cell.u1[0] = 1.0
                     if cell.position in self.sources['purple']:
-                        cell.u2[0] = 100
+                        cell.u2[0] = 1.0
         
 
     def gammaCalculation(self, dt, diffCoeff):
-        gamma = [(diffCoeff['yellow'] * dt), (diffCoeff['purple'] * dt), (((diffCoeff['yellow'] + diffCoeff['purple'])/2) * dt)]
+        gamma = [(diffCoeff['yellow'] * dt), (diffCoeff['purple'] * dt), (((diffCoeff['yellow'] + diffCoeff['purple'])/2) * dt), (((diffCoeff['yellow'] + diffCoeff['purple'])/2) * dt)]
         return gamma
 
     def updateSources(self, test):
