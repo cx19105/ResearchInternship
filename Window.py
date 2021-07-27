@@ -13,7 +13,7 @@ class Window:
     '''
     Class to hold the grid window along with functions to draw and colour each of the grid squares
     '''
-    def __init__(self, grid, diffCoeff, time, animation, continuousSources, timeStep, test):
+    def __init__(self, grid, diffCoeff, time, animation, continuousSources, timeStep, test, createGraph):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.Grid = grid
@@ -34,6 +34,7 @@ class Window:
         self.selectedCells = []
         self.timeInterval = timeStep
         self.test = test
+        self.graph = createGraph
 
     def getGridSquare(self):
 
@@ -97,8 +98,9 @@ class Window:
     def createGraph(self, cell):
 
         '''Function used for testing the model'''
-        
+        title = 'Concentrations of chemicals in cell: ' + str(cell.position[0])+','+str(cell.position[1])
         timeSpan = range(0, self.maxTime)
+        plt.title(title)
         plt.plot(timeSpan, cell.u1, '-r', cell.u2, '-b', cell.u3, '-g', cell.u4, '-k')
         plt.legend(['E', 'S','P', 'ES'])
         plt.show()
@@ -205,7 +207,7 @@ class Window:
         #Recolours the grid accordingly
         self.colourGrid(self.time)
         self.Grid.sources = []
-        if self.test:
+        if self.test or self.graph:
             self.createGraph(self.Grid.selectedCells[0])
 
         #Uncomment following line to run test on total concentration
@@ -240,8 +242,7 @@ class Window:
                     cell.u3[timeStep+1] = cell.nextValues[2]
                     cell.u4[timeStep+1] = cell.nextValues[3]
         self.getValueOfCell()
-        if self.test == True:
-            self.createGraph(self.Grid.selectedCells[0])
+        
 
         frame = 0
         while frame < maxTime:
@@ -249,9 +250,14 @@ class Window:
             pygame.display.update()
             time.sleep(self.timeInterval)
             if frame >= maxTime-1:
-                frame = 0
+                if self.test == True or self.graph == True:
+                    self.createGraph(self.Grid.selectedCells[0])
+                    pygame.quit()
+                    sys.exit()
             else:
                 frame += 1
+        
+        
 
 
     def buttonPressed(self):

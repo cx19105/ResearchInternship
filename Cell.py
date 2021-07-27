@@ -48,8 +48,7 @@ class Cell:
         '''u1 *= self.boundary
         u2 *= self.boundary
         u3 *= self.boundary
-'''     
-        print(str(currentValues[2]), str(u3), str(sum(neighbourSum3)))
+'''    
 
         return [u1, u2, u3, u4]
 

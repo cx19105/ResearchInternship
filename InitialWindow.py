@@ -164,11 +164,35 @@ def makeWindow():
     separator4 = ttk.Separator(window, orient='horizontal')
     separator4.grid(row=18, column = 0, columnspan = 8, sticky='ew', pady=5)
 
-    entries = [gridSizeEntryCol, gridSizeEntryRow, diffCoeffEntryS1, diffCoeffEntryS2, diffCoeffEntryB1, diffCoeffEntryB2, timeEntry, filenameEntry, reactTerm1Entry, reactTerm2Entry, reactTerm3Entry, reactTerm4Entry, animationTimeStepEntry]
-    boolEntries = [toggleSourceBoolVar, animationBoolVar, filenameBoolVar, toggleTestBoolVar]
+    createGraphLabel = tk.Label(window, text="Create Graph")
+    createGraphLabel.grid(row=19, column = 0, columnspan = 2)
+
+    createGraphBoolVar = tk.BooleanVar()
+    createGraphBool = tk.Checkbutton(window, variable=createGraphBoolVar, offvalue = False)
+    createGraphBool.grid(row=19, column=2)
+
+    selectCoordText = tk.Label(window, text="Selected Coordinate:")
+    selectCoordText.grid(row=20, column=1, sticky='e')
+
+    selectCoordCol = tk.Entry(window, width = 5)
+    selectCoordCol.grid(row=20, column = 2)
+    selectCoordCol.insert(0, 10)
+
+    selectCoord = tk.Label(window, text=',')
+    selectCoord.grid(row=20, column=3)
+
+    selectCoordRow = tk.Entry(window, width = 5)
+    selectCoordRow.grid(row=20, column = 4)
+    selectCoordRow.insert(0, 10)
+
+    separator5 = ttk.Separator(window, orient='horizontal')
+    separator5.grid(row=21, column = 0, columnspan = 8, sticky='ew', pady=5)
+
+    entries = [gridSizeEntryCol, gridSizeEntryRow, diffCoeffEntryS1, diffCoeffEntryS2, diffCoeffEntryB1, diffCoeffEntryB2, timeEntry, filenameEntry, reactTerm1Entry, reactTerm2Entry, reactTerm3Entry, reactTerm4Entry, animationTimeStepEntry, selectCoordCol, selectCoordRow]
+    boolEntries = [toggleSourceBoolVar, animationBoolVar, filenameBoolVar, toggleTestBoolVar, createGraphBoolVar]
 
     continueButton = tk.Button(window, text="Continue", command =lambda:returnEntries(entries, boolEntries))
-    continueButton.grid(row=19, column=3, columnspan=2, padx = 5, pady =5)
+    continueButton.grid(row=22, column=3, columnspan=2, padx = 5, pady =5)
 
     tk.mainloop()
 
