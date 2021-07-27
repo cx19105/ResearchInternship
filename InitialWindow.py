@@ -138,21 +138,21 @@ def makeWindow():
 
     reactTerm1Entry = tk.Entry(window, width = 5)
     reactTerm1Entry.grid(row=17, column = 0, columnspan = 2)
-    reactTerm1Entry.insert(0, 0.8)
+    reactTerm1Entry.insert(0, 0.7)
 
     reactTerm2Text = tk.Label(window, text="Term 2")
     reactTerm2Text.grid(row=16, column = 2, columnspan = 2)
 
     reactTerm2Entry = tk.Entry(window, width = 5)
     reactTerm2Entry.grid(row=17, column = 2, columnspan = 2)
-    reactTerm2Entry.insert(0, 0.8)
+    reactTerm2Entry.insert(0, 0.15)
 
     reactTerm3Text = tk.Label(window, text="Term 3")
     reactTerm3Text.grid(row=16, column = 4, columnspan = 2)
 
     reactTerm3Entry = tk.Entry(window, width = 5)
     reactTerm3Entry.grid(row=17, column = 4, columnspan = 2)
-    reactTerm3Entry.insert(0, 0.0)
+    reactTerm3Entry.insert(0, 0.1)
 
     reactTerm4Text = tk.Label(window, text="Term 4")
     reactTerm4Text.grid(row=16, column = 6, columnspan = 2)

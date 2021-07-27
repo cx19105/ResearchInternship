@@ -25,7 +25,7 @@ def h(u1, u2, u3, rates):
     
     return [u1_new, u2_new, u3_new]
 
-def getEquations(u1, u2, u3, u4):
+def getEquations(u1, u2, u3, u4, rates):
     '''
     Function to store all of the reactions for each cell
     Form: [[equation of form aA + bB = cC + dD], Reactants, Products, [a,b,c,d], k]
@@ -47,11 +47,15 @@ def getEquations(u1, u2, u3, u4):
     u3 = P
     u4 = ES
     '''
-
+    '''
     k_f = 0.7
     k_r = 0.15
     k_cat = 0.1
-
+    '''
+    k_f = rates[0]
+    k_r = rates[1]
+    k_cat = rates[2]
+    
     reactions.append([['u1', 'u2', 'u4','None'], [u1, u2], [u4, None],[1, 1, 1, 0], k_f])
     reactions.append([['u4','None','u1','u2'], [u4, None], [u1, u2], [1,0,1,1], k_r])
     reactions.append([['u4', 'None', 'u1', 'u3'], [u4, None], [u1, u3], [1, 0, 1, 1], k_cat])

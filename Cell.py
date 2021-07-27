@@ -62,7 +62,7 @@ class Cell:
         u3 = currentValues[2]
         u4 = currentValues[3]
 
-        for reaction in reactionEquations.getEquations(u1, u2, u3, u4):
+        for reaction in reactionEquations.getEquations(u1, u2, u3, u4, self.rates):
             new_u = reactionEquations.generalEquation(reaction[1], reaction[2], reaction[3], reaction[4], currentValues)
             for i in range(0, len(new_u)):
                 
