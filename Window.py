@@ -102,7 +102,7 @@ class Window:
         timeSpan = range(0, self.maxTime)
         plt.title(title)
         plt.plot(timeSpan, cell.u1, '-r', cell.u2, '-b', cell.u3, '-g', cell.u4, '-k')
-        plt.legend(['E', 'S','P', 'ES'])
+        plt.legend(['S', 'E','P', 'ES'])
         plt.show()
 
     def getNeighbouringCells(self, cellPosition, maxSize):

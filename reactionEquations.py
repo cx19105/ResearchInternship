@@ -32,7 +32,7 @@ def getEquations(u1, u2, u3, u4, rates):
     '''
     reactions = []
 
-    # A + B -> C
+    #A + B -> C
     #reactions.append([['u1','u2','u3', None], [u1, u2], [u3, None], [1,1,2,0], 2])
 
     # C -> A + B
@@ -55,11 +55,11 @@ def getEquations(u1, u2, u3, u4, rates):
     k_f = rates[0]
     k_r = rates[1]
     k_cat = rates[2]
-
+    
     reactions.append([['u1', 'u2', 'u4','None'], [u1, u2], [u4, None],[1, 1, 1, 0], k_f])
     reactions.append([['u4','None','u1','u2'], [u4, None], [u1, u2], [1,0,1,1], k_r])
     reactions.append([['u4', 'None', 'u1', 'u3'], [u4, None], [u1, u3], [1, 0, 1, 1], k_cat])
-
+    
     return reactions
 
 def generalEquation(reactants, products, reactionCoeffs, k, u_new):

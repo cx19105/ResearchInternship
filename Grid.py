@@ -1,5 +1,5 @@
 
-from Colours import BLACK, WHITE, GREEN, BLUE, RED, YELLOW, PURPLE
+from Colours import BLACK, WHITE, GREEN, BLUE, RED, YELLOW, PURPLE, LIGHTYELLOW, LIGHTPURPLE
 import pygame
 from Cell import Cell
 import numpy as np
@@ -10,9 +10,11 @@ class Grid:
         self.Grid = []
         self.GridSquareSize = [20,20] #Size in pixels of each gridsquare
         self.Margin = 1
-        self.sources = {'purple':[], 'yellow':[]}
+        self.sources = {'purple':[], 'yellow':[], 'yellowHalf':[], 'purpleHalf':[]}
         self.boundary = {'perm':[], 'full':[]}
         self.selectedCells = []
+        self.maxConc = 1.0
+        self.halfConc = 0.5
         self.create(reactionRates, selectedCoords)
 
     def create(self, reactionRates, selectedCoords):
@@ -50,6 +52,10 @@ class Grid:
             self.colourGrid(source, display, YELLOW)
         for source in self.sources['purple']:
             self.colourGrid(source, display, PURPLE)
+        for source in self.sources['yellowHalf']:
+            self.colourGrid(source, display, LIGHTYELLOW)
+        for source in self.sources['purpleHalf']:
+            self.colourGrid(source, display, LIGHTPURPLE)
 
     def colourGrid(self, gridSquare, display, colour):
 
@@ -74,9 +80,13 @@ class Grid:
                         cell.u2[0] = 0.75
                 else:
                     if cell.position in self.sources['yellow']:
-                        cell.u1[0] = 1.0
+                        cell.u1[0] = self.maxConc
                     if cell.position in self.sources['purple']:
-                        cell.u2[0] = 1.0
+                        cell.u2[0] = self.maxConc
+                    if cell.position in self.sources['yellowHalf']:
+                        cell.u1[0] = self.halfConc
+                    if cell.position in self.sources['purpleHalf']:
+                        cell.u2[0] = self.halfConc
         
 
     def gammaCalculation(self, dt, diffCoeff):
@@ -86,6 +96,6 @@ class Grid:
     def updateSources(self, test):
         for col in self.Grid:
             for cell in col:
-                if (cell.position in self.sources['yellow'] or cell.position in self.sources['purple']):
+                if (cell.position in self.sources['yellow'] or cell.position in self.sources['purple'] or cell.position in self.sources['yellowHalf'] or cell.position in self.sources['purpleHalf']):
                     if test == False:
                         cell.source = True

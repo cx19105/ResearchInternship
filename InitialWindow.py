@@ -176,14 +176,14 @@ def makeWindow():
 
     selectCoordCol = tk.Entry(window, width = 5)
     selectCoordCol.grid(row=20, column = 2)
-    selectCoordCol.insert(0, 10)
+    selectCoordCol.insert(0, 0)
 
     selectCoord = tk.Label(window, text=',')
     selectCoord.grid(row=20, column=3)
 
     selectCoordRow = tk.Entry(window, width = 5)
     selectCoordRow.grid(row=20, column = 4)
-    selectCoordRow.insert(0, 10)
+    selectCoordRow.insert(0, 0)
 
     separator5 = ttk.Separator(window, orient='horizontal')
     separator5.grid(row=21, column = 0, columnspan = 8, sticky='ew', pady=5)

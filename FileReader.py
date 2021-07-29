@@ -30,6 +30,10 @@ class FileReader:
                     grid.sources['purple'].append([col+margin, row+margin])
                 elif cell == '4':
                     grid.boundary['full'].append([col+margin, row+margin])
+                elif cell == '5':
+                    grid.sources['yellowHalf'].append([col+margin, row+margin])
+                elif cell == '6':
+                    grid.sources['purpleHalf'].append([col+margin, row+margin])
     
     def getGridSize(self):
 
