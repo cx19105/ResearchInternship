@@ -5,6 +5,7 @@ import InitialWindow
 
 entryBoxes = InitialWindow.makeWindow()
 
+#Getting all the values from the initial window
 
 values = {'Gridsize':[int(entryBoxes[0]), int(entryBoxes[1])], 'DiffCoeff':[float(entryBoxes[2]), float(entryBoxes[3]), float(entryBoxes[4]), float(entryBoxes[5])], 'time': int(entryBoxes[6]), 'filename':entryBoxes[7], 
     'toggleSource':entryBoxes[15], 'animation':entryBoxes[16], 'file':entryBoxes[17], 'ReactTerms':[float(entryBoxes[8]), float(entryBoxes[9]), float(entryBoxes[10]), float(entryBoxes[11])], 
@@ -18,12 +19,13 @@ TIME = values['time']
 CONTINUOUS_SOURCES = values['toggleSource']
 animation = values['animation']
 TIMESTEP = values['timeStep']
-
 selectedCoords = [values['selectedCoords']]
 createGraph = values['createGraph']
-#Insert filename for grid
 filename = 'ResearchInternship/'+values['filename']
 gridFile = None
+
+#Loads the grid window, either from a file or a blank one
+#Test case is a 1x1 grid with only reaction occuring
 
 if TEST == True:
     grid = Grid([1,1], REACTTERMS, selectedCoords)
@@ -38,6 +40,7 @@ elif values['file'] == True:
 else:
     grid = Grid(GRIDSIZE, REACTTERMS, selectedCoords)
 
-window = Window(grid, DIFFCOEFF, TIME, animation, CONTINUOUS_SOURCES, TIMESTEP, TEST, createGraph)
+#Displays the grid window
 
+window = Window(grid, DIFFCOEFF, TIME, animation, CONTINUOUS_SOURCES, TIMESTEP, TEST, createGraph)
 window.updateWindow()

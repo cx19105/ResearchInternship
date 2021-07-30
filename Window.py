@@ -15,7 +15,6 @@ class Window:
     '''
     def __init__(self, grid, diffCoeff, time, animation, continuousSources, timeStep, test, createGraph):
         pygame.init()
-        self.clock = pygame.time.Clock()
         self.Grid = grid
         self.time = time
         self.maxTime = time + 1
@@ -242,8 +241,7 @@ class Window:
                     cell.u3[timeStep+1] = cell.nextValues[2]
                     cell.u4[timeStep+1] = cell.nextValues[3]
         self.getValueOfCell()
-        
-
+        #Display each frame with a time interval to show animation
         frame = 0
         while frame < maxTime:
             self.colourGrid(frame)
@@ -256,9 +254,6 @@ class Window:
                     sys.exit()
             else:
                 frame += 1
-        
-        
-
 
     def buttonPressed(self):
 
@@ -280,7 +275,6 @@ class Window:
                     self.currentSource = RED
                 elif key == 'green':
                     self.currentSource = GREEN
-
 
     def updateWindow(self):
 

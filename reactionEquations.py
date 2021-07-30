@@ -41,13 +41,13 @@ def getEquations(u1, u2, u3, u4, rates):
     # A -> B
     #reactions.append([['u1', None, 'u2', None], [u1, None], [u2, None], [1, 0, 1, 0], 1])
 
-    '''Michaelis-Menten Kinetics
+    '''
+    Michaelis-Menten Kinetics
     u1 = E
     u2 = S
     u3 = P
     u4 = ES
-    '''
-    '''
+
     k_f = 0.7
     k_r = 0.15
     k_cat = 0.1

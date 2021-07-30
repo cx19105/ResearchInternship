@@ -45,10 +45,9 @@ class Cell:
         u4 = currentValues[3]
 
         #Need to update to get better boundary diffusion
-        '''u1 *= self.boundary
+        u1 *= self.boundary
         u2 *= self.boundary
         u3 *= self.boundary
-'''    
 
         return [u1, u2, u3, u4]
 
@@ -60,11 +59,12 @@ class Cell:
         u2 = currentValues[1]
         u3 = currentValues[2]
         u4 = currentValues[3]
-
+        
+        #Iterates through each reaction equation
         for reaction in reactionEquations.getEquations(u1, u2, u3, u4, self.rates):
             new_u = reactionEquations.generalEquation(reaction[1], reaction[2], reaction[3], reaction[4], currentValues)
+            #Updates the correct concentration based on the reaction equation
             for i in range(0, len(new_u)):
-                
                 if reaction[0][i] == 'u1':
                     u1 += new_u[i]
                 elif reaction[0][i] == 'u2':
@@ -91,8 +91,11 @@ class Cell:
             currentValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]
             
             if test == False:
+                #Update diffusion
                 currentValues = self.diffusionUpdate(neighbouringCells, gamma, time, currentValues)
+            #Update reaction
             currentValues = self.reactionUpdate(neighbouringCells, time, currentValues)
             self.nextValues = currentValues
         else:
+            #If cell is a source, maintain the values
             self.nextValues = [self.u1[time], self.u2[time], self.u3[time], self.u4[time]]

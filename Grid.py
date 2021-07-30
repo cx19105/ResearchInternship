@@ -67,6 +67,9 @@ class Grid:
         pygame.draw.rect(display, colour, [xpos, ypos, self.GridSquareSize[0], self.GridSquareSize[1]])
 
     def boundaryConditions(self, time, test):
+        '''
+        Set initial concentrations for all grid squares
+        '''
         for col in self.Grid:
             for cell in col:
                 cell.u1 = np.zeros(time)
@@ -90,10 +93,16 @@ class Grid:
         
 
     def gammaCalculation(self, dt, diffCoeff):
+        '''
+        Calculate the gamma for the sources, used for the diffusion
+        '''
         gamma = [(diffCoeff['yellow'] * dt), (diffCoeff['purple'] * dt), (((diffCoeff['yellow'] + diffCoeff['purple'])/2) * dt), (((diffCoeff['yellow'] + diffCoeff['purple'])/2) * dt)]
         return gamma
 
     def updateSources(self, test):
+        '''
+        Work out if a particular grid cell is a source or not
+        '''
         for col in self.Grid:
             for cell in col:
                 if (cell.position in self.sources['yellow'] or cell.position in self.sources['purple'] or cell.position in self.sources['yellowHalf'] or cell.position in self.sources['purpleHalf']):
